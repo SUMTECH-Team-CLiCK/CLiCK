@@ -1,0 +1,178 @@
+/* 전체 레이아웃 */
+.app-container {
+  display: flex;
+  height: 100vh;
+  font-family: sans-serif;
+  background-color: #f7f7f7;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #202123;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sidebar-section h3 {
+  font-size: 0.9rem;
+  color: #a9a9a9;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chat-item {
+  padding: 0.6rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-item:hover {
+  background-color: #343541;
+}
+
+.chat-item button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+}
+
+/* 채팅창 */
+.chat-window {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.message {
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  max-width: 70%;
+}
+
+.message.user {
+  background-color: #d1e7dd;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.message.gpt {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+}
+
+/* 프롬프트 입력 및 분석 */
+.prompt-input-area {
+    position: relative;
+}
+.prompt-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.prompt-form textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: none;
+}
+.prompt-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+.prompt-buttons button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.analyze-button {
+  background-color: #28a745;
+  color: white;
+}
+.loading-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* 프롬프트 분석창 */
+.prompt-analysis-container {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.analysis-tags {
+    display: flex;
+    gap: 0.5rem;
+}
+.tag {
+    background-color: #e0e0e0;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+.close-btn {
+    background: none; border: none; font-size: 1.5rem; cursor: pointer;
+}
+.analysis-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.analysis-box {
+    padding: 1rem;
+    border-radius: 5px;
+}
+.analysis-box.suggested { background-color: #e6ffed; }
+.analysis-box.original { background-color: #fff0f1; }
+.analysis-footer {
+    text-align: center;
+    margin-top: 1rem;
+}
+.apply-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
