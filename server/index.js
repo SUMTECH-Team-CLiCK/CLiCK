@@ -1,19 +1,14 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import apiRouter from './routes/api.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import apiRouter from "./routes/api.js";
 
 dotenv.config();
-
 const app = express();
-const port = 3001; // 백엔드 서버 포트
 
-app.use(cors()); // CORS 허용
-app.use(express.json()); // JSON 요청 본문 파싱
+app.use(cors({ origin: true }));
+app.use(express.json());
+app.use("/api", apiRouter);
 
-// API 라우트 연결
-app.use('/api', apiRouter);
-
-app.listen(port, () => {
-  console.log(`🚀 Server is running on http://localhost:${port}`);
-});
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

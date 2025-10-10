@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "CLiCK",
+  "version": "1.0.0",
+  "description": "좌측 맞춤 프롬프트, 초록 버튼 분석, 태그별 수정이 가능한 ChatGPT 확장.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["http://localhost:3001/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
+

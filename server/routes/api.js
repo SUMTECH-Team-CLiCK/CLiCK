@@ -1,50 +1,44 @@
-import { Router } from 'express';
-import OpenAI from 'openai';
+import { Router } from "express";
+import OpenAI from "openai";
+import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
 
+dotenv.config();
 const router = Router();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
 
-// 일반 채팅 응답 API
-router.post('/chat', async (req, res) => {
-  try {
-    const { message } = req.body;
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: message }],
-      model: 'gpt-4-turbo-preview',
-    });
-    res.json({ reply: completion.choices[0].message.content });
-  } catch (error) {
-    console.error('Error calling OpenAI API:', error);
-    res.status(500).json({ error: 'Failed to fetch response from OpenAI' });
-  }
-});
-
-// 프롬프트 분석 및 제안 API
-router.post('/analyze-prompt', async (req, res) => {
-  try {
+router.post("/analyze-prompt", async (req, res) => {
     const { prompt } = req.body;
+    try {
+        const sys = `다음 프롬프트를 태그별로 분석하고 JSON 형식으로 수정안을 제시해줘. 
+형식: {"tags":[],"patches":{},"full_suggestion":""}`;
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [
+                { role: "system", content: sys },
+                { role: "user", content: prompt },
+            ],
+        });
 
-    const systemMessage = `You are an expert prompt engineer. Analyze the user's prompt. Rewrite it to be clearer and more effective. Identify weaknesses and categorize them into '지시 불명확', '구조/길이 중복', '문법/스타일 개선'. Provide your output in a JSON format with 'suggested_prompt' and an 'analysis' array.`;
+        const parsed = JSON.parse(completion.choices[0].message.content);
+        await supabase.from("analyses").insert({
+            user_id: "anon",
+            source_text: prompt,
+            tags: parsed.tags,
+            patches: parsed.patches,
+            full_suggestion: parsed.full_suggestion,
+        });
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
-      messages: [
-        { role: 'system', content: systemMessage },
-        { role: 'user', content: prompt }
-      ],
-      response_format: { type: 'json_object' }
-    });
-    
-    const analysisResult = JSON.parse(completion.choices[0].message.content);
-    res.json(analysisResult);
-
-  } catch (error) {
-    console.error('Error calling OpenAI API for analysis:', error);
-    res.status(500).json({ error: 'Failed to analyze prompt' });
-  }
+        res.json(parsed);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "분석 실패" });
+    }
 });
 
 export default router;
