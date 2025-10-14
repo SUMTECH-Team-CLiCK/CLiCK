@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// axios는 이제 background에서만 사용하므로 여기서 import할 필요가 없습니다.
 import PromptAnalysis from './PromptAnalysis';
-
-const API = 'http://localhost:3001/api';
 
 export default function PromptInput({ onSend, onOverwriteInput }) {
   const [value, setValue] = useState('');
@@ -12,11 +10,23 @@ export default function PromptInput({ onSend, onOverwriteInput }) {
   const handleAnalyze = async () => {
     if (!value.trim()) return;
     setLoading(true);
+
     try {
-      const res = await axios.post(`${API}/analyze-prompt`, { prompt: value });
-      setAnalysis({ source: value, result: res.data });
-    } catch {
-      alert('분석 실패');
+      // background.js에 메시지를 보내고 응답을 기다립니다.
+      const response = await chrome.runtime.sendMessage({
+        type: 'ANALYZE_PROMPT',
+        prompt: value
+      });
+      
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      setAnalysis({ source: value, result: response });
+
+    } catch (err) {
+      console.error('분석 실패:', err);
+      alert('분석에 실패했습니다. 백엔드 서버가 켜져 있는지 확인해주세요.');
     } finally {
       setLoading(false);
     }
