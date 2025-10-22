@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PromptAnalysis from './PromptAnalysis';
 import Sidebar from './Sidebar';
 
@@ -14,8 +14,6 @@ export default function PromptInput() {
     const [textarea, setTextarea] = useState(null);
     const [liveText, setLiveText] = useState('');
     const [panelSize, setPanelSize] = useState({});
-    const [btnPos, setBtnPos] = useState(null);
-    const rafRef = useRef(null);
 
     // textarea를 찾고, 패널이 열려 있으면 실시간 값 반영
     useEffect(() => {
@@ -33,38 +31,6 @@ export default function PromptInput() {
         }, 500);
         return () => clearInterval(interval);
     }, []);
-
-    // 버튼 위치 동기화 (textarea 기준)
-    useEffect(() => {
-        if (!textarea) return;
-        function updatePos() {
-            const r = textarea.getBoundingClientRect();
-            const btnW = 36;
-            const gap = 8;
-            const left = Math.round(r.right - btnW - gap);
-            const top = Math.round(r.top + (r.height - btnW) / 2);
-            setBtnPos({ left, top, width: btnW, height: btnW });
-        }
-        updatePos();
-        window.addEventListener('resize', updatePos);
-        window.addEventListener('scroll', updatePos, true);
-        // 문서 변경으로 위치가 바뀌는 경우 RAF로 계속 동기화(짧은 시간)
-        let ticking = false;
-        const tick = () => {
-            if (!ticking) {
-                ticking = true;
-                rafRef.current = requestAnimationFrame(() => { updatePos(); ticking = false; });
-            }
-        };
-        const mo = new MutationObserver(tick);
-        mo.observe(document.body, { subtree: true, childList: true, attributes: true });
-        return () => {
-            window.removeEventListener('resize', updatePos);
-            window.removeEventListener('scroll', updatePos, true);
-            mo.disconnect();
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-        };
-    }, [textarea]);
 
     // 패널이 열려 있으면 입력값을 실시간 반영 (이벤트+폴링)
     useEffect(() => {
@@ -100,33 +66,26 @@ export default function PromptInput() {
             setPanelSize({
                 width: taRect.width ? taRect.width + 'px' : undefined,
                 minHeight: taRect.height ? taRect.height + 'px' : undefined,
-                left: taRect.left + 'px',
-                topAbove: Math.max(8, taRect.top - 240) + 'px',
             });
         }
         syncPanelSize();
         window.addEventListener('resize', syncPanelSize);
-        window.addEventListener('scroll', syncPanelSize, true);
         return () => window.removeEventListener('resize', syncPanelSize);
     }, [isPanelVisible, textarea]);
 
-    // 분석하기 버튼 클릭 시 (패널 열림)
-    const handleTogglePanel = () => {
-        if (!textarea) return;
-        const val = getTextareaValue(textarea);
-        if (!val.trim()) return;
-        setLiveText(val);
-        setPanelVisible(v => !v);
-    };
-
-    // 실제 분석 호출(간이)
+    // 분석하기 버튼 클릭 시
     const handleAnalyze = async () => {
         if (!textarea || !getTextareaValue(textarea).trim()) return;
         setLoading(true);
         try {
+            // 실제 백엔드 연동 시 아래 주석 해제
+            // const response = await chrome.runtime.sendMessage({
+            //     type: 'ANALYZE_PROMPT',
+            //     prompt: getTextareaValue(textarea)
+            // });
+            // if (response.error) throw new Error(response.error);
             const response = { tags: [], patches: {}, full_suggestion: getTextareaValue(textarea) };
             setAnalysis({ source: getTextareaValue(textarea), result: response });
-            setPanelVisible(true);
         } catch (err) {
             console.error('분석 실패:', err);
             alert('분석에 실패했습니다. 백엔드 서버를 확인해주세요.');
@@ -144,57 +103,29 @@ export default function PromptInput() {
     };
 
     return (
-        <>
-            {/* 버튼은 textarea 위에 fixed로 오버레이 */}
-            {btnPos && (
-                <button
-                    className="click-analyze-button"
-                    title="프롬프트 분석"
-                    onClick={handleTogglePanel}
-                    style={{
-                        position: 'fixed',
-                        left: btnPos.left + 'px',
-                        top: btnPos.top + 'px',
-                        width: btnPos.width + 'px',
-                        height: btnPos.height + 'px',
-                        padding: 0,
-                        borderRadius: '6px',
-                        zIndex: 9999,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    ⌘
-                </button>
-            )}
-
-            {/* 패널: 버튼 클릭 시 body에 overlay div처럼 렌더링 (id 있음) */}
+        <div className="click-prompt-tools-container">
+            {/* 분석 패널 열기/닫기 버튼 (⌘) */}
+            <button
+                className="click-analyze-button"
+                title="프롬프트 분석"
+                onClick={() => setPanelVisible(v => !v)}
+                style={{ marginRight: 8 }}
+            >
+                ⌘
+            </button>
+            {/* 분석 패널 */}
             {isPanelVisible && (
-                <div
-                    id="click-prompt-tools-root"
-                    style={{
-                        position: 'fixed',
-                        left: panelSize.left || (btnPos ? btnPos.left + 'px' : '8px'),
-                        top: panelSize.topAbove || (btnPos ? (btnPos.top - 220) + 'px' : '8px'),
-                        width: panelSize.width || (btnPos ? (btnPos.width * 10) + 'px' : '480px'),
-                        minHeight: panelSize.minHeight || '120px',
-                        zIndex: 9998,
-                        background: 'var(--composer-input-bg, var(--token-main-surface-primary, #fff))',
-                        boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                    }}
-                >
+                <div style={{ position: 'relative', zIndex: 100 }}>
                     <PromptAnalysis
-                        source={analysis ? analysis.source : liveText}
+                        source={liveText}
                         result={analysis ? analysis.result : { tags: [], patches: {}, full_suggestion: liveText }}
                         onClose={() => setPanelVisible(false)}
                         onApplyAll={handleApplyAll}
+                        panelStyle={panelSize}
                     />
                     <button
                         className="click-analyze-panel-btn"
-                        style={{ position: 'absolute', top: 12, right: 12, zIndex: 10001 }}
+                        style={{ position: 'absolute', top: 12, right: 60, zIndex: 101 }}
                         onClick={handleAnalyze}
                         disabled={loading}
                     >
@@ -202,6 +133,6 @@ export default function PromptInput() {
                     </button>
                 </div>
             )}
-        </>
+        </div>
     );
 }
