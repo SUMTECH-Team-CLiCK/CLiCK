@@ -1,0 +1,203 @@
+/* 추천 프롬프트 섹션 */
+#click-recommended-prompts-root {
+    margin: 0 0 8px 0;
+    padding: 0;
+}
+
+.click-sidebar-container {
+    background: var(--background-primary);
+    border-radius: 8px;
+    margin: 0 8px 8px 8px;
+    padding: 12px 8px 8px 8px;
+    box-shadow: none;
+    border: 1px solid var(--border-color, #222);
+}
+
+.click-sidebar-container h3 {
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.click-sidebar-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.click-sidebar-container li {
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+    background: none;
+    cursor: pointer;
+    font-size: 0.97rem;
+    transition: background 0.18s, color 0.18s;
+}
+
+.click-sidebar-container li:hover {
+    background: var(--background-hover, #232323);
+    color: var(--text-primary);
+}
+
+/* 프롬프트 분석 버튼 및 패널 */
+.click-analyze-button {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: var(--background-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color, #222);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+}
+
+.click-analyze-button:hover:not(:disabled) {
+    background: var(--background-hover, #232323);
+    color: var(--text-primary);
+}
+
+.click-analyze-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.click-prompt-tools-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.click-analysis-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    background: var(--background-primary);
+    border: 1px solid var(--border-color, #222);
+    border-radius: 8px;
+    padding: 15px 18px 12px 18px;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+    width: 100%;
+    min-width: 320px;
+    max-width: 700px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.click-analysis-panel .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.click-analysis-panel .panel-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.click-analysis-panel .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color 0.18s;
+}
+
+.click-analysis-panel .close-btn:hover {
+    color: var(--text-primary);
+}
+
+.click-analysis-panel .panel-body {
+    margin-bottom: 15px;
+}
+
+.click-analysis-panel .text-container {
+    padding: 10px;
+    background-color: var(--background-secondary);
+    border-radius: 5px;
+    min-height: 60px;
+    color: var(--text-primary);
+    font-size: 0.97rem;
+    white-space: pre-wrap;
+}
+
+.click-analysis-panel .highlight {
+    border-radius: 3px;
+    padding: 2px 1px;
+}
+
+.click-analysis-panel .highlight.모호--지시-불명확 {
+    background-color: rgba(255, 100, 100, 0.3);
+}
+.click-analysis-panel .highlight.구조--길이-중복 {
+    background-color: rgba(255, 255, 100, 0.4);
+}
+.click-analysis-panel .highlight.문체--스타일-개선 {
+    background-color: rgba(100, 100, 255, 0.3);
+}
+
+.click-analysis-panel .panel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.click-analysis-panel .tag-bar {
+    display: flex;
+    gap: 8px;
+}
+
+.click-analysis-panel .tag {
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.click-analysis-panel .tag.모호--지시-불명확.active {
+    background-color: rgba(255, 100, 100, 0.7);
+    color: white;
+}
+.click-analysis-panel .tag.구조--길이-중복.active {
+    background-color: rgba(255, 255, 100, 0.8);
+    color: #333;
+}
+.click-analysis-panel .tag.문체--스타일-개선.active {
+    background-color: rgba(100, 100, 255, 0.7);
+    color: white;
+}
+
+.click-analysis-panel .apply-all-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-left: 10px;
+    transition: background 0.18s;
+}
+
+.click-analysis-panel .apply-all-btn:hover {
+    background: #3576c7;
+}

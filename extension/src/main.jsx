@@ -1,30 +1,65 @@
-// src/main.jsx (개선된 버전)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-import css from './App.css?inline'; // Vite에서 CSS를 텍스트로 가져오는 문법
 
-// 1. UI를 삽입할 최상위 host 요소를 생성합니다.
-const host = document.createElement('div');
-host.id = "click-react-root";
-document.body.appendChild(host);
+import Sidebar from './components/Sidebar';
+import PromptInput from './components/PromptInput';
+import './App.css'; 
 
-// 2. Shadow DOM을 생성하여 외부 CSS로부터 앱을 격리합니다.
-const shadowRoot = host.attachShadow({ mode: 'open' });
+// ★★★
+// 이 파일은 빌드 후 content.js가 되어 ChatGPT 페이지에 직접 주입됩니다.
+// 따라서 이 파일 자체가 콘텐츠 스크립트의 역할을 수행합니다.
+// ★★★
 
-// 3. Shadow DOM 내부에 React 앱을 렌더링할 컨테이너를 만듭니다.
-const appContainer = document.createElement('div');
-shadowRoot.appendChild(appContainer);
+function injectSidebar() {
+    const targetNav = document.querySelector('nav');
+    if (targetNav && !document.querySelector('#click-sidebar-root')) {
+        const sidebarRoot = document.createElement('div');
+        sidebarRoot.id = 'click-sidebar-root';
+        targetNav.prepend(sidebarRoot);
 
-// 4. Shadow DOM 내부에 스타일을 직접 주입합니다.
-const styleEl = document.createElement('style');
-styleEl.textContent = css;
-shadowRoot.appendChild(styleEl);
+        const root = ReactDOM.createRoot(sidebarRoot);
+        root.render(
+            <React.StrictMode>
+                <Sidebar />
+            </React.StrictMode>
+        );
+        return true;
+    }
+    return false;
+}
 
-// 5. 격리된 컨테이너에 React 앱을 렌더링합니다.
-const root = ReactDOM.createRoot(appContainer);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+function injectPromptTools() {
+    const targetForm = document.querySelector('form');
+    if (targetForm && !document.querySelector('#click-prompt-tools-root')) {
+        const promptToolsRoot = document.createElement('div');
+        promptToolsRoot.id = 'click-prompt-tools-root';
+        // 폼의 부모요소에, 폼 바로 앞에 삽입하여 입력창 위에 위치시킴
+        targetForm.parentNode.insertBefore(promptToolsRoot, targetForm);
+
+        const root = ReactDOM.createRoot(promptToolsRoot);
+        root.render(
+            <React.StrictMode>
+                <PromptInput />
+            </React.StrictMode>
+        );
+        return true;
+    }
+    return false;
+}
+
+// MutationObserver를 사용하여 ChatGPT의 동적 UI 로딩에 대응
+const observer = new MutationObserver((mutations, obs) => {
+    const sidebarInjected = injectSidebar();
+    const promptToolsInjected = injectPromptTools();
+
+    // 두 UI가 모두 성공적으로 주입되면 관찰을 중단하여 성능 저하 방지
+    if (document.querySelector('#click-sidebar-root') && document.querySelector('#click-prompt-tools-root')) {
+        obs.disconnect();
+        console.log("CLICK: All UI components injected successfully.");
+    }
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});

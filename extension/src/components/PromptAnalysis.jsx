@@ -1,38 +1,55 @@
 import React, { useMemo, useState } from 'react';
 
 export default function PromptAnalysis({ source, result, onClose, onApplyAll }) {
-  const [enabledTags, setEnabledTags] = useState([]);
+    // 활성화된 태그들을 관리
+    const [enabledTags, setEnabledTags] = useState(() => result.tags || []);
 
-  const patched = useMemo(() => {
-    let out = source;
-    enabledTags.forEach(tag => {
-      (result.patches[tag] || []).forEach(p => {
-        out = out.replace(p.from, p.to);
-      });
-    });
-    return out;
-  }, [enabledTags, source, result]);
+    const toggleTag = (tag) => {
+        setEnabledTags(prev => 
+            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+        );
+    };
 
-  return (
-    <div className="analysis-container">
-      <div style={{ display: 'flex', alignItems: 'center', padding: '8px' }}>
-        <h3 style={{ flex: 1 }}>프롬프트 분석</h3>
-        <button onClick={onClose}>닫기</button>
-      </div>
-      <div style={{ display: 'flex', padding: '8px' }}>
-        <textarea value={source} readOnly style={{ flex: 1, marginRight: '8px' }} />
-        <textarea value={patched} readOnly style={{ flex: 1 }} />
-      </div>
-      <div style={{ padding: '8px' }}>
-        {(result.tags || []).map(tag => (
-          <button key={tag} onClick={() =>
-            setEnabledTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
-          }>
-            {enabledTags.includes(tag) ? '✅ ' : ''}{tag}
-          </button>
-        ))}
-        <button onClick={() => onApplyAll(result.full_suggestion || patched)}>전체 수정</button>
-      </div>
-    </div>
-  );
+    // 활성화된 태그에 따라 수정된 텍스트를 계산
+    const patchedText = useMemo(() => {
+        if (!result.patches) return source;
+        let output = source;
+        enabledTags.forEach(tag => {
+            (result.patches[tag] || []).forEach(p => {
+                output = output.replace(p.from, p.to);
+            });
+        });
+        return output;
+    }, [enabledTags, source, result]);
+
+    return (
+        <div className="click-analysis-panel">
+            <div className="panel-header">
+                <h3>GPT Prompt Analysis</h3>
+                <div className="tag-bar">
+                    {(result.tags || []).map(tag => (
+                        <button 
+                            key={tag} 
+                            className={`tag ${enabledTags.includes(tag) ? 'active' : ''}`}
+                            onClick={() => toggleTag(tag)}
+                        >
+                            {tag}
+                        </button>
+                    ))}
+                </div>
+                <button className="apply-all-btn" onClick={() => onApplyAll(result.full_suggestion || patchedText)}>
+                    전체 수정
+                </button>
+                <button className="close-btn" onClick={onClose}>×</button>
+            </div>
+            <div className="panel-body">
+                <div className="text-container original">
+                    <p>{source}</p>
+                </div>
+                <div className="text-container suggestion">
+                    <p>{patchedText}</p>
+                </div>
+            </div>
+        </div>
+    );
 }

@@ -1,63 +1,122 @@
-.app-container {
-  display: flex;
-  height: 100vh;
-  font-family: 'Noto Sans KR', sans-serif;
+/* Sidebar 삽입 스타일 */
+#click-sidebar-root {
+    padding: 0 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.click-sidebar-container h3 {
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+    color: #8e8ea0;
+    margin-bottom: 0.5rem;
+}
+.click-sidebar-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.click-sidebar-container li {
+    padding: 0.6rem 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #ececf1;
+}
+.click-sidebar-container li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar {
-  width: 260px;
-  background: #f4f4f4;
-  padding: 16px;
-  overflow-y: auto;
-  border-right: 1px solid #ccc;
+/* 프롬프트 분석 도구 스타일 */
+#click-prompt-tools-root {
+    width: 100%;
+    max-width: 48rem; /* ChatGPT 입력창 최대 너비와 유사하게 */
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽으로 */
 }
 
-.chat-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
+#click-analyze-button {
+    /* ChatGPT의 기본 버튼 스타일 상속 */
+    background-color: var(--token-main-surface-primary);
+    color: var(--token-text-primary);
+    border: 1px solid var(--token-border-light);
+    border-radius: 18px; /* 둥근 모서리 */
+    padding: 6px 12px;
+    margin-right: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    white-space: nowrap; /* 텍스트가 두 줄로 나뉘지 않도록 설정 */
 }
 
-.prompt-input-area {
-  border-top: 1px solid #ddd;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
+#click-analyze-button:hover {
+    /* ChatGPT의 호버 스타일 상속 */
+    background-color: var(--token-surface-hover);
 }
 
-.prompt-form textarea {
-  width: 100%;
-  resize: none;
-  padding: 8px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+/* 분석 패널 (입력창 위에 나타남) */
+.click-analysis-panel {
+    width: 100%;
+    background: #343541;
+    border: 1px solid #555;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
-
-.prompt-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 8px;
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: #202123;
 }
-
-.analyze-button {
-  background: #10a37f;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+.panel-header h3 { margin: 0; font-size: 0.9rem; }
+.tag-bar { display: flex; gap: 0.5rem; }
+.tag {
+    background: #40414f;
+    color: #d1d5db;
+    border: 1px solid #555;
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    cursor: pointer;
 }
-
-.analysis-container {
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+.tag.active {
+    background: #10a37f;
+    color: white;
+    border-color: #10a37f;
+}
+.apply-all-btn {
+    margin-left: auto; /* 오른쪽으로 밀어내기 */
+    background: #10a37f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+.close-btn {
+    background: none;
+    border: none;
+    color: #8e8ea0;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.panel-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid #555;
+}
+.text-container {
+    padding: 1rem;
+    min-height: 150px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #d1d5db;
+}
+.text-container.original {
+    border-right: 1px solid #555;
 }
