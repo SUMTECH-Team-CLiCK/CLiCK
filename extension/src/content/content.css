@@ -126,9 +126,7 @@
 }
 
 .click-analysis-panel .text-container {
-    padding: 10px;
     background-color: var(--background-secondary);
-    border-radius: 5px;
     min-height: 60px;
     color: var(--text-primary);
     font-size: 0.97rem;

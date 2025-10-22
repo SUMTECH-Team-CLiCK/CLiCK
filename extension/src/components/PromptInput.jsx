@@ -125,7 +125,6 @@ export default function PromptInput() {
                     />
                     <button
                         className="click-analyze-panel-btn"
-                        style={{ position: 'absolute', top: 12, right: 60, zIndex: 101 }}
                         onClick={handleAnalyze}
                         disabled={loading}
                     >
