@@ -1,16 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 
-export default function PromptAnalysis({ source, result, onClose, onApplyAll }) {
-    // 활성화된 태그들을 관리
+export default function PromptAnalysis({ source, result, onClose, onApplyAll, panelStyle }) {
     const [enabledTags, setEnabledTags] = useState(() => result.tags || []);
+    const bodyRef = useRef(null);
+    const headerRef = useRef(null);
+    const [bodyHeight, setBodyHeight] = useState();
 
     const toggleTag = (tag) => {
         setEnabledTags(prev => 
             prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
         );
     };
-
-    // 활성화된 태그에 따라 수정된 텍스트를 계산
     const patchedText = useMemo(() => {
         if (!result.patches) return source;
         let output = source;
@@ -21,10 +21,23 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll }) 
         });
         return output;
     }, [enabledTags, source, result]);
-
+    const fallbackStyle = {
+        color: (panelStyle && panelStyle.color) || 'var(--token-text-primary, #222)',
+        background: (panelStyle && panelStyle.background) || 'var(--token-main-surface-primary, #fff)',
+        fontFamily: (panelStyle && panelStyle.fontFamily) || 'var(--font-sans, Inter, Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif)',
+        fontSize: (panelStyle && panelStyle.fontSize) || 'var(--composer-font-size, 1rem)',
+        width: panelStyle && panelStyle.width,
+    };
+    // 입력창 높이 + header 높이만큼 전체 패널 높이
+    useEffect(() => {
+        if (!panelStyle || !panelStyle.minHeight) return;
+        if (!headerRef.current) return;
+        const headerH = headerRef.current.offsetHeight || 0;
+        setBodyHeight(`calc(${panelStyle.minHeight} - ${headerH}px)`);
+    }, [panelStyle, headerRef.current]);
     return (
-        <div className="click-analysis-panel">
-            <div className="panel-header">
+        <div className="click-analysis-panel" style={{...panelStyle, ...fallbackStyle}}>
+            <div className="panel-header" style={fallbackStyle} ref={headerRef}>
                 <h3>GPT Prompt Analysis</h3>
                 <div className="tag-bar">
                     {(result.tags || []).map(tag => (
@@ -42,13 +55,8 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll }) 
                 </button>
                 <button className="close-btn" onClick={onClose}>×</button>
             </div>
-            <div className="panel-body">
-                <div className="text-container original">
-                    <p>{source}</p>
-                </div>
-                <div className="text-container suggestion">
-                    <p>{patchedText}</p>
-                </div>
+            <div className="panel-body" ref={bodyRef} style={{borderTop: '1px solid var(--token-border-light, #d9d9e3)', padding: 0, height: bodyHeight, overflow: 'auto', background: 'inherit'}}>
+                <pre className="text-container" style={{...fallbackStyle, margin: 0, padding: '1rem', whiteSpace: 'pre-wrap', border: 'none', background: 'none', boxShadow: 'none'}}>{patchedText}</pre>
             </div>
         </div>
     );

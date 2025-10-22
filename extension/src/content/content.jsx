@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
+import PromptInput from '../components/PromptInput';
 
 // --- 헬퍼 함수 및 마운트 관리 ---
 function createAndMount(rootEl, reactElement, cleanupFn) {
@@ -314,24 +315,57 @@ function injectPromptTools() {
     if (document.querySelector('#click-prompt-tools-root')) return false;
     const form = document.querySelector('form');
     const textarea = document.querySelector('#prompt-textarea');
+
+    // 정확한 클래스 선택자 사용 (각 클래스 앞에 점) 및 classList 기반 폴백
+    let flexRows = [];
+    if (form) {
+        try {
+            flexRows = Array.from(form.querySelectorAll('.ms-auto.flex.items-center.gap-1.5'));
+        } catch (e) {
+            flexRows = [];
+        }
+        if (!flexRows || flexRows.length === 0) {
+            const candidates = Array.from(form.querySelectorAll('div'));
+            flexRows = candidates.filter(el => ['ms-auto', 'flex', 'items-center', 'gap-1.5'].every(c => el.classList && el.classList.contains(c)));
+        }
+    }
+
+    let injected = false;
+    if (flexRows && flexRows.length > 0) {
+        for (const flexRow of flexRows) {
+            if (!flexRow.querySelector('#click-prompt-tools-root')) {
+                const root = document.createElement('div');
+                root.id = 'click-prompt-tools-root';
+                root.style.pointerEvents = 'auto';
+                root.style.width = 'auto';
+                root.style.height = 'auto';
+                root.style.display = 'flex';
+                root.style.alignItems = 'center';
+                root.style.justifyContent = 'center';
+                root.style.background = 'none';
+                root.style.color = 'inherit';
+                flexRow.appendChild(root);
+                positionPromptAndWatch(root, textarea, flexRow);
+                createAndMount(root, <React.StrictMode><PromptInput /></React.StrictMode>);
+                injected = true;
+                break; // 첫 번째 유효한 flexRow에만 주입
+            }
+        }
+        if (injected) return true;
+    }
+
+    // fallback: 기존 방식
     const root = document.createElement('div');
     root.id = 'click-prompt-tools-root';
     root.style.pointerEvents = 'auto';
-    root.style.width = '48px';
-    root.style.height = '48px';
-    root.style.borderRadius = '24px';
+    root.style.width = 'auto';
+    root.style.height = 'auto';
     root.style.display = 'flex';
     root.style.alignItems = 'center';
     root.style.justifyContent = 'center';
-    root.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
-    root.style.background = 'var(--bg, rgba(20,20,20,0.9))';
-    root.style.color = 'var(--fg, #fff)';
-    if (sidebar && form && form.parentElement) {
-        const parent = form.parentElement;
-        if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
-        parent.appendChild(root);
-        positionPromptAndWatch(root, textarea, parent);
-    } else if (form && form.parentElement) {
+    root.style.background = 'none';
+    root.style.color = 'inherit';
+    if (form && form.parentElement) {
         const parent = form.parentElement;
         if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
         parent.appendChild(root);
@@ -345,7 +379,7 @@ function injectPromptTools() {
         root.style.bottom = '24px';
         document.body.appendChild(root);
     }
-    createAndMount(root, <React.StrictMode><PromptAnalysis /></React.StrictMode>);
+    createAndMount(root, <React.StrictMode><PromptInput /></React.StrictMode>);
     return true;
 }
 
