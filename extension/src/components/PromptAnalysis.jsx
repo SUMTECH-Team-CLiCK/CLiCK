@@ -30,12 +30,20 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     };
     // 입력창 높이 + header 높이만큼 전체 패널 높이
     useEffect(() => {
-        if (!panelStyle || !panelStyle.minHeight) return;
-        if (!headerRef.current) return;
+    //     if (!panelStyle || !panelStyle.minHeight) return;
+    //     if (!headerRef.current) return;
+    //     const headerH = headerRef.current.offsetHeight || 0;
+    //     setBodyHeight(`calc(${panelStyle.minHeight} + ${headerH}px)`);
+    //     // setBodyHeight(panelStyle.minHeight);
+    // }, [panelStyle, headerRef.current]);
+    if (!panelStyle || !panelStyle.minHeight || !headerRef.current) {
+            return;
+        }
+        // panelStyle이 변경될 때마다 header의 높이를 다시 측정
         const headerH = headerRef.current.offsetHeight || 0;
+        // 본문 높이 = (입력창 높이 - 헤더 높이)
         setBodyHeight(`calc(${panelStyle.minHeight} + ${headerH}px)`);
-        // setBodyHeight(panelStyle.minHeight);
-    }, [panelStyle, headerRef.current]);
+    }, [panelStyle]); // 의존성 배열에서 headerRef.current 제거
     return (
         <div className="click-analysis-panel" style={{...panelStyle, ...fallbackStyle}}>
             <div className="panel-header" style={fallbackStyle} ref={headerRef}>

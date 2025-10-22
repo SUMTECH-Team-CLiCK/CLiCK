@@ -138,7 +138,7 @@
     background: none;
     border: none;
     white-space: pre-wrap;
-    
+
     margin-top: calc(var(--spacing, .25rem) * 4);
     padding-bottom: calc(var(--spacing, .25rem) * 4);
     transform: translateY(-.5px);
