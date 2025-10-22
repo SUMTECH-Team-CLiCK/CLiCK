@@ -137,6 +137,9 @@
     font-family: inherit;
     background: none;
     border: none;
-    margin: 0;
     white-space: pre-wrap;
+    
+    margin-top: calc(var(--spacing, .25rem) * 4);
+    padding-bottom: calc(var(--spacing, .25rem) * 4);
+    transform: translateY(-.5px);
 }

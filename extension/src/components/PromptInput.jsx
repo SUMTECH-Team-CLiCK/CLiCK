@@ -115,7 +115,7 @@ export default function PromptInput() {
             </button>
             {/* 분석 패널 */}
             {isPanelVisible && (
-                <div style={{ position: 'relative', zIndex: 100 }}>
+                <div style={{ position: 'relative', zIndex: 100, width: '100%' }}>
                     <PromptAnalysis
                         source={liveText}
                         result={analysis ? analysis.result : { tags: [], patches: {}, full_suggestion: liveText }}

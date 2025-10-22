@@ -33,8 +33,8 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
         if (!panelStyle || !panelStyle.minHeight) return;
         if (!headerRef.current) return;
         const headerH = headerRef.current.offsetHeight || 0;
-        // setBodyHeight(`calc(${panelStyle.minHeight} - ${headerH}px)`);
-        setBodyHeight(panelStyle.minHeight);
+        setBodyHeight(`calc(${panelStyle.minHeight} + ${headerH}px)`);
+        // setBodyHeight(panelStyle.minHeight);
     }, [panelStyle, headerRef.current]);
     return (
         <div className="click-analysis-panel" style={{...panelStyle, ...fallbackStyle}}>
