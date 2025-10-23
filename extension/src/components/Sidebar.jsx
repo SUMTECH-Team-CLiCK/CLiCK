@@ -12,6 +12,7 @@ export default function Sidebar() {
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
             textarea.focus();
         }
+        isPanelVisible = true;
     };
     return (
         <aside className="click-sidebar-container">

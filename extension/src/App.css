@@ -2,7 +2,6 @@
 #click-sidebar-root {
     padding: 0 0.5rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid var(--token-border-light, rgba(255,255,255,0.1));
 }
 .click-sidebar-container {
     font-family: var(--composer-font-family, var(--font-sans, 'Inter', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif));
@@ -101,21 +100,21 @@ click-analyze-button, .click-analyze-button h3 {
 
 /* 분석 패널 (입력창 위에 나타남) */
 .click-analysis-panel {
-    background: var(--bg-primary);
-    color: var(--composer-input-color, var(--token-text-primary, #222));
     border: 0 solid;
     box-sizing: border-box;
     border-radius: var(--composer-input-radius, 28px);
     font-family: var(--composer-font-family, var(--font-sans, 'Inter', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif));
     font-size: var(--composer-font-size, 1rem);
+
     width: inherit;
-    /* min-width: 48rem; */
-    /* max-width는 채팅창과 동일하게 맞춰지므로 제거하거나 유지할 수 있습니다. */
-    /* max-width: 48rem; */
-    /* margin-bottom: 1rem; */ /* panel-root에서 제어하므로 제거 */
     overflow: hidden;
     --tw-shadow: 0px 4px 4px 0px var(--tw-shadow-color, var(--shadow-color-1, #0000000a)), 0px 0px 1px 0px var(--tw-shadow-color, var(--shadow-color-2, #0000009e));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+
+    color: var(--token-text-primary, #222); 
+    background: var(--token-main-surface-primary, #fff); 
+    font-family: var(--font-sans, Inter, Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif); 
+    font-size: var(--composer-font-size, 1rem);
 }
 
 
@@ -180,7 +179,5 @@ click-analyze-button, .click-analyze-button h3 {
 }
 .panel-footer {
     background: var(--token-main-surface-secondary, #f7f7f8);
-    padding: calc(var(--spacing, .25rem) * 2) calc(var(--spacing, .25rem) * 4);
-    text-align: right;
-    border-top: 1px solid var(--token-border-light, #d9d9e3);
+    padding: calc(var(--spacing, .25rem) * 2) calc(var(--spacing, .25rem) * 2);
 }

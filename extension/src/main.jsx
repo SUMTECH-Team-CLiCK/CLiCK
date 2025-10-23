@@ -56,7 +56,7 @@ function injectAnalysisContainer() {
     if (targetForm && !document.querySelector('#click-prompt-tools-container')) {
         const panelRoot = document.createElement('div');
         panelRoot.id = 'click-prompt-tools-container';
-        panelRoot.style.width = '100%'; // 부모 너비를 채우도록 설정
+        // panelRoot.style.width = '100%'; // 부모 너비를 채우도록 설정
         
         // form 앞에 삽입
         targetForm.parentNode.insertBefore(panelRoot, targetForm);

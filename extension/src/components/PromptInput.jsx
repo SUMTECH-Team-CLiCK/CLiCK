@@ -21,25 +21,7 @@ export default function PromptInput() {
         const panelRoot = document.getElementById('click-prompt-tools-container');
         if (!panelRoot) return null;
 
-        // React Portal을 사용하여 패널을 #click-panel-root로 렌더링합니다.
         return ReactDOM.createPortal(
-            // <div style={{ position: 'relative', zIndex: 100 }}>
-            //     <PromptAnalysis
-            //         source={liveText}
-            //         result={analysis ? analysis.result : { tags: [], patches: {}, full_suggestion: liveText }}
-            //         onClose={() => setPanelVisible(false)}
-            //         onApplyAll={handleApplyAll}
-            //         panelStyle={panelSize}
-            //     />
-            //     <button
-            //         className="click-analyze-panel-btn"
-            //         style={{ position: 'absolute', top: 12, right: 60, zIndex: 101 }}
-            //         onClick={handleAnalyze}
-            //         disabled={loading}
-            //     >
-            //         {loading ? '분석중...' : '분석하기'}
-            //     </button>
-            // </div>,
             <div className="click-prompt-tools-container">
                 {/* 분석 패널 */}
                 {isPanelVisible && (
@@ -51,13 +33,13 @@ export default function PromptInput() {
                         onApplyAll={handleApplyAll}
                         panelStyle={panelSize}
                     />
-                    <button
+                    {/* <button
                         className="click-analyze-panel-btn"
                         onClick={handleAnalyze}
                         disabled={loading}
                     >
                         {loading ? '분석중...' : '분석하기'}
-                    </button>
+                    </button> */}
                 </div>
                 )}
             </div>,
