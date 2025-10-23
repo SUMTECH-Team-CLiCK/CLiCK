@@ -36,7 +36,7 @@ function injectPromptTools() {
 
 function injectClickButton() {
     // 채팅창 오른쪽의 아이콘 그룹을 선택합니다.
-    const targetContainer = document.querySelector('div[class*="[grid-area:trailing]"]');
+    const targetContainer = document.querySelector('[class="ms-auto flex items-center gap-1.5"]');
     if (targetContainer && !document.querySelector('#click-button-root')) {
         const buttonRoot = document.createElement('div');
         buttonRoot.id = 'click-button-root';
