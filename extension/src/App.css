@@ -49,6 +49,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-color: var(--border-light, currentColor);
 }
 
 /* 패널 루트 스타일 */
@@ -72,22 +73,40 @@
 }
 
 #click-analyze-button, .click-analyze-button, .click-analyze-panel-btn {
-    background: var(--composer-input-bg, var(--token-main-surface-primary, #fff));
-    color: var(--composer-input-color, var(--token-text-primary, #222));
-    border: var(--composer-input-border, 1px solid var(--token-border-light, #d9d9e3));
-    border-radius: var(--composer-input-radius, 18px);
-    padding: 6px 12px;
+    /* border-radius: var(--composer-input-radius, 18px);
+    padding: 6px 6px;
     cursor: pointer;
     font-size: var(--composer-font-size, 1rem);
     font-family: var(--composer-font-family, var(--font-sans, 'Inter', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif));
     font-weight: 500;
     transition: background-color 0.2s ease;
-    white-space: nowrap;
+    white-space: nowrap; */
     /* 버튼 위치가 변경되었으므로, 불필요한 margin-right 제거 */
     /* margin-right: 8px; */ 
+    align-items: center;
+    border-radius: 3.40282e+38px;
+    color: var(--text-primary);
+    display: flex
+;
+    font-size: var(--text-sm);
+    height: calc(var(--spacing) * 9);
+    justify-content: center;
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    min-width: calc(var(--spacing) * 9);
+    position: relative;
+    z-index: 0;
 }
+
 #click-analyze-button:hover, .click-analyze-button:hover, .click-analyze-panel-btn:hover {
     background-color: var(--token-surface-hover, #f4f4f4);
+}
+
+click-analyze-button, .click-analyze-button h3 {
+    height: calc(var(--spacing) * 5);
+    width: calc(var(--spacing) * 5);
+    font-size: inherit;
+    fill: currentColor;
+    viewBox : 0 0 20 20
 }
 
 /* 분석 패널 (입력창 위에 나타남) */
@@ -115,8 +134,8 @@
     align-items: center;
     gap: 1rem;
     background: var(--token-main-surface-secondary, #f7f7f8);
-    margin-top: calc(var(--spacing, .25rem) * 4);
-    padding-bottom: calc(var(--spacing, .25rem) * 4);
+    margin-top: calc(var(--spacing, .25rem));
+    padding-bottom: calc(var(--spacing, .25rem));
 }
 .panel-header h3 { margin: 0; font-size: 0.95rem; }
 .tag-bar { display: flex; gap: 0.5rem; }

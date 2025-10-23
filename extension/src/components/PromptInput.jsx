@@ -139,7 +139,7 @@ export default function PromptInput() {
                 title="프롬프트 분석"
                 onClick={() => setPanelVisible(v => !v)}
             >
-                ⌘
+                <h3>⌘</h3>
             </button>
             
             {/* isPanelVisible이 true일 때만 Portal을 통해 패널을 렌더링 */}
