@@ -31,7 +31,7 @@ function injectSidebar() {
 function injectPromptTools() {
     // 이 함수는 이제 버튼과 패널 삽입을 모두 처리하는 두 개의 새 함수를 호출합니다.
     injectClickButton();
-    injectAnalysisPanel();
+    injectAnalysisContainer
 }
 
 function injectClickButton() {
@@ -50,12 +50,12 @@ function injectClickButton() {
     }
 }
 
-function injectAnalysisPanel() {
+function injectAnalysisContainer() {
     // 패널은 form 태그 바로 앞에 삽입합니다.
-    const targetForm = document.querySelector('form[data-type="unified-composer"]');
-    if (targetForm && !document.querySelector('#click-panel-root')) {
+    const targetForm = document.querySelector('[class="absolute start-0 end-0 bottom-full z-20"]');
+    if (targetForm && !document.querySelector('#click-prompt-tools-container')) {
         const panelRoot = document.createElement('div');
-        panelRoot.id = 'click-panel-root';
+        panelRoot.id = 'click-prompt-tools-container';
         panelRoot.style.width = '100%'; // 부모 너비를 채우도록 설정
         
         // form 앞에 삽입
