@@ -38,12 +38,6 @@
     background-color: var(--token-surface-hover, rgba(255,255,255,0.08));
 }
 
-/* 프롬프트 분석 도구 스타일 */
-#click-prompt-tools-root {
-    /* 이 ID는 이제 사용되지 않으므로 관련 스타일을 제거하거나 수정할 수 있습니다. */
-    /* 하지만 호환성을 위해 남겨둡니다. */
-}
-
 /* 새롭게 추가된 버튼 루트 스타일 */
 #click-button-root {
     display: flex;
@@ -103,7 +97,6 @@ click-analyze-button, .click-analyze-button h3 {
     width: calc(var(--spacing) * 5);
     font-size: inherit;
     fill: currentColor;
-    viewBox : 0 0 20 20
 }
 
 /* 분석 패널 (입력창 위에 나타남) */
@@ -115,13 +108,12 @@ click-analyze-button, .click-analyze-button h3 {
     border-radius: var(--composer-input-radius, 28px);
     font-family: var(--composer-font-family, var(--font-sans, 'Inter', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif));
     font-size: var(--composer-font-size, 1rem);
-    width: 100%;
-    min-width: 48rem;
+    width: inherit;
+    /* min-width: 48rem; */
     /* max-width는 채팅창과 동일하게 맞춰지므로 제거하거나 유지할 수 있습니다. */
     /* max-width: 48rem; */
     /* margin-bottom: 1rem; */ /* panel-root에서 제어하므로 제거 */
     overflow: hidden;
-    border-radius: 28px;
     --tw-shadow: 0px 4px 4px 0px var(--tw-shadow-color, var(--shadow-color-1, #0000000a)), 0px 0px 1px 0px var(--tw-shadow-color, var(--shadow-color-2, #0000009e));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
 }
