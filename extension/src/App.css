@@ -76,7 +76,6 @@
     font-size: var(--composer-font-size, 1rem);
     width: 100%;
     min-width: 320px;
-    max-width: 48rem;
     margin-bottom: 1rem;
     overflow: hidden;
     border-radius: 28px;
@@ -90,6 +89,8 @@
     align-items: center;
     gap: 1rem;
     background: var(--token-main-surface-secondary, #f7f7f8);
+    margin-top: calc(var(--spacing, .25rem) * 4);
+    padding-bottom: calc(var(--spacing, .25rem) * 4);
 }
 .panel-header h3 { margin: 0; font-size: 0.95rem; }
 .tag-bar { display: flex; gap: 0.5rem; }
