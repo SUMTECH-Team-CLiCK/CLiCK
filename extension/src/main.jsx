@@ -29,23 +29,40 @@ function injectSidebar() {
 }
 
 function injectPromptTools() {
-    const targetForm = document.querySelector('form');
-    if (targetForm && !document.querySelector('#click-prompt-tools-root')) {
-        const promptToolsRoot = document.createElement('div');
-        promptToolsRoot.id = 'click-prompt-tools-root';
-        // 폼의 부모요소에, 폼 바로 앞에 삽입하여 입력창 위에 위치시킴
-        targetForm.parentNode.insertBefore(promptToolsRoot, targetForm);
-
-        const root = ReactDOM.createRoot(promptToolsRoot);
-        root.render(
-            <React.StrictMode>
-                <PromptInput />
-            </React.StrictMode>
-        );
-        return true;
-    }
-    return false;
+    // 이 함수는 이제 버튼과 패널 삽입을 모두 처리하는 두 개의 새 함수를 호출합니다.
+    injectClickButton();
+    injectAnalysisPanel();
 }
+
+function injectClickButton() {
+    // 채팅창 오른쪽의 아이콘 그룹을 선택합니다.
+    const targetContainer = document.querySelector('div[class*="[grid-area:trailing]"]');
+    if (targetContainer && !document.querySelector('#click-button-root')) {
+        const buttonRoot = document.createElement('div');
+        buttonRoot.id = 'click-button-root';
+        
+        // 아이콘 그룹의 맨 앞에 버튼을 추가합니다.
+        targetContainer.prepend(buttonRoot);
+
+        const root = ReactDOM.createRoot(buttonRoot);
+        // PromptInput 컴포넌트가 버튼과 패널의 로직을 모두 관리합니다.
+        root.render(<PromptInput />);
+    }
+}
+
+function injectAnalysisPanel() {
+    // 패널은 form 태그 바로 앞에 삽입합니다.
+    const targetForm = document.querySelector('form[data-type="unified-composer"]');
+    if (targetForm && !document.querySelector('#click-panel-root')) {
+        const panelRoot = document.createElement('div');
+        panelRoot.id = 'click-panel-root';
+        panelRoot.style.width = '100%'; // 부모 너비를 채우도록 설정
+        
+        // form 앞에 삽입
+        targetForm.parentNode.insertBefore(panelRoot, targetForm);
+    }
+}
+
 
 // 폼/버튼이 사라졌을 때 자동 복구를 위한 폴백 인터벌
 let clickUiInterval = null;

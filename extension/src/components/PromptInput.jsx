@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import PromptAnalysis from './PromptAnalysis';
 import Sidebar from './Sidebar';
 
@@ -14,6 +15,34 @@ export default function PromptInput() {
     const [textarea, setTextarea] = useState(null);
     const [liveText, setLiveText] = useState('');
     const [panelSize, setPanelSize] = useState({});
+
+    // 패널을 DOM의 별도 위치에 렌더링하기 위한 로직
+    const renderPanel = () => {
+        const panelRoot = document.getElementById('click-panel-root');
+        if (!panelRoot) return null;
+
+        // React Portal을 사용하여 패널을 #click-panel-root로 렌더링합니다.
+        return ReactDOM.createPortal(
+            <div style={{ position: 'relative', zIndex: 100 }}>
+                <PromptAnalysis
+                    source={liveText}
+                    result={analysis ? analysis.result : { tags: [], patches: {}, full_suggestion: liveText }}
+                    onClose={() => setPanelVisible(false)}
+                    onApplyAll={handleApplyAll}
+                    panelStyle={panelSize}
+                />
+                <button
+                    className="click-analyze-panel-btn"
+                    style={{ position: 'absolute', top: 12, right: 60, zIndex: 101 }}
+                    onClick={handleAnalyze}
+                    disabled={loading}
+                >
+                    {loading ? '분석중...' : '분석하기'}
+                </button>
+            </div>,
+            panelRoot
+        );
+    };
 
     // textarea를 찾고, 패널이 열려 있으면 실시간 값 반영
     useEffect(() => {
@@ -103,35 +132,18 @@ export default function PromptInput() {
     };
 
     return (
-        <div className="click-prompt-tools-container">
-            {/* 분석 패널 열기/닫기 버튼 (⌘) */}
+        <>
+            {/* 분석 패널 열기 버튼 (이제 마이크 옆에 표시됨) */}
             <button
                 className="click-analyze-button"
                 title="프롬프트 분석"
                 onClick={() => setPanelVisible(v => !v)}
-                style={{ marginRight: 8 }}
             >
                 ⌘
             </button>
-            {/* 분석 패널 */}
-            {isPanelVisible && (
-                <div style={{ position: 'relative', zIndex: 100, width: '100%' }}>
-                    <PromptAnalysis
-                        source={liveText}
-                        result={analysis ? analysis.result : { tags: [], patches: {}, full_suggestion: liveText }}
-                        onClose={() => setPanelVisible(false)}
-                        onApplyAll={handleApplyAll}
-                        panelStyle={panelSize}
-                    />
-                    <button
-                        className="click-analyze-panel-btn"
-                        onClick={handleAnalyze}
-                        disabled={loading}
-                    >
-                        {loading ? '분석중...' : '분석하기'}
-                    </button>
-                </div>
-            )}
-        </div>
+            
+            {/* isPanelVisible이 true일 때만 Portal을 통해 패널을 렌더링 */}
+            {isPanelVisible && renderPanel()}
+        </>
     );
 }
