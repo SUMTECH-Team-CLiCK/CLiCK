@@ -64,7 +64,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                 </button>
                 <button className="close-btn" onClick={onClose}>×</button>
             </div>
-            <div className="panel-body" ref={bodyRef} style={{borderTop: '1px solid var(--token-border-light, #d9d9e3)', padding: 0, height: bodyHeight, overflow: 'auto', background: 'inherit'}}>
+            <div className="panel-body" ref={bodyRef} style={{padding: 0, height: bodyHeight, overflow: 'auto', background: 'inherit'}}>
                 <div className="text-container" style={{...fallbackStyle, margin: 0, padding: '1rem', whiteSpace: 'pre-wrap', border: 'none', background: 'none', boxShadow: 'none'}}>{patchedText}</div>
             </div>
         </div>

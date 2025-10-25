@@ -15,9 +15,9 @@
 .click-sidebar-container h3 {
     padding: 0 0.5rem;
     font-size: 0.85rem;
-    color: var(--token-text-tertiary, #8e8ea0);
     margin-bottom: 0.5rem;
     font-weight: 600;
+    fill: currentColor;
 }
 .click-sidebar-container ul {
     list-style: none;
@@ -59,28 +59,18 @@
     align-items: center;
     width: 100%;
     border-radius: var(--composer-input-radius, 12px);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 #click-analyze-button, .click-analyze-button, .click-analyze-panel-btn {
-    /* border-radius: var(--composer-input-radius, 18px);
-    padding: 6px 6px;
-    cursor: pointer;
-    font-size: var(--composer-font-size, 1rem);
-    font-family: var(--composer-font-family, var(--font-sans, 'Inter', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif));
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-    white-space: nowrap; */
-    /* 버튼 위치가 변경되었으므로, 불필요한 margin-right 제거 */
-    /* margin-right: 8px; */ 
     align-items: center;
+    justify-content: center;
     border-radius: 3.40282e+38px;
     color: var(--text-primary);
     display: flex
 ;
     font-size: var(--text-sm);
     height: calc(var(--spacing) * 9);
-    justify-content: center;
     line-height: var(--tw-leading, var(--text-sm--line-height));
     min-width: calc(var(--spacing) * 9);
     position: relative;
@@ -117,14 +107,14 @@ click-analyze-button, .click-analyze-button h3 {
     font-size: var(--composer-font-size, 1rem);
 }
 
-
 .panel-header {
     display: flex;
     align-items: center;
     gap: 1rem;
     background: var(--token-main-surface-secondary, #f7f7f8);
-    margin-top: calc(var(--spacing, .25rem));
-    padding-bottom: calc(var(--spacing, .25rem));
+    padding-top: calc(var(--spacing, .25rem) * 2);
+    padding-left: calc(var(--spacing, .25rem) * 5);
+    padding-right: calc(var(--spacing, .25rem) * 5);
 }
 .panel-header h3 { margin: 0; font-size: 0.95rem; }
 .tag-bar { display: flex; gap: 0.5rem; }
@@ -145,15 +135,24 @@ click-analyze-button, .click-analyze-button h3 {
 }
 .apply-all-btn {
     margin-left: auto;
-    background: var(--theme-submit-btn-bg);
-    color: white;
+    background: var(--theme-user-selection-bg);
+    fill : currentColor;
     border: none;
-    border-radius: 6px;
+    border-radius: 28px;
     padding: 0.5rem 1rem;
     cursor: pointer;
     font-family: inherit;
+
+    height: calc(var(--spacing) * 6);
+    justify-content: center;
+}
+
+.apply-all-btn h3 {
+    height: calc(var(--spacing) * 5);
+    width: calc(var(--spacing) * 5);
 }
 .close-btn {
+    /* margin-left: auto; */
     background: none;
     border: none;
     color: var(--token-text-tertiary, #8e8ea0);
@@ -172,9 +171,8 @@ click-analyze-button, .click-analyze-button h3 {
     background: none;
     border: none;
     white-space: pre-wrap;
-
-    margin-top: calc(var(--spacing, .25rem) * 4);
-    padding-bottom: calc(var(--spacing, .25rem) * 4);
+    padding-left: calc(var(--spacing, .25rem) * 5);
+    padding-right: calc(var(--spacing, .25rem) * 5);
     transform: translateY(-.5px);
 }
 .panel-footer {

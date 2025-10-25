@@ -55,7 +55,7 @@ export default function PromptInput() {
                 setTextarea(ta);
                 if (isPanelVisible) setLiveText(getTextareaValue(ta));
                 setPanelSize({
-                    width: ta.offsetWidth ? ta.offsetWidth + 'px' : undefined,
+                    width: '100%',
                     minHeight: ta.offsetHeight ? ta.offsetHeight + 'px' : undefined,
                 });
                 clearInterval(interval);
@@ -96,7 +96,7 @@ export default function PromptInput() {
         function syncPanelSize() {
             const taRect = textarea.getBoundingClientRect();
             setPanelSize({
-                width: taRect.width ? taRect.width + 'px' : undefined,
+                width: '100%',
                 minHeight: taRect.height ? taRect.height + 'px' : undefined,
             });
         }
@@ -143,7 +143,29 @@ export default function PromptInput() {
                 title="프롬프트 분석"
                 onClick={() => setPanelVisible(v => !v)}
             >
-                <h3>⌘</h3>
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 5300 5300"
+                        fill="currentColor">
+                    <g transform="translate(0,5300) scale(0.1,-0.1)">
+                        <path d="M39665 52989 c-852 -63 -1591 -329 -2269 -813 -406 -291 -748 -595
+                            -1511 -1343 -258 -253 -8359 -8351 -18001 -17995 -11256 -11257 -17549 -17558
+                            -17581 -17603 -140 -193 -224 -382 -280 -627 -16 -68 -17 -530 -20 -6638 -3
+                            -5869 -2 -6576 12 -6671 29 -201 85 -370 177 -532 218 -384 571 -641 1017
+                            -740 l96 -21 6560 -3 c5882 -3 6571 -2 6667 12 266 39 473 123 701 284 75 54
+                            35820 35795 36114 36111 636 684 958 1112 1203 1600 219 436 361 937 427 1505
+                            24 212 24 749 0 960 -121 1034 -449 1753 -1202 2630 -379 441 -657 723 -4452
+                            4516 -3354 3352 -3675 3669 -4008 3969 -872 784 -1515 1139 -2379 1315 -410
+                            83 -873 114 -1271 84z m620 -3014 c252 -45 384 -104 618 -278 410 -305 546
+                            -438 4762 -4658 3339 -3343 3531 -3537 3831 -3884 391 -452 498 -702 499
+                            -1160 0 -189 -9 -261 -52 -430 -72 -283 -267 -553 -833 -1155 -106 -113 -2200
+                            -2212 -4652 -4665 l-4458 -4460 -5355 5355 -5355 5355 4542 4541 c2499 2497
+                            4613 4605 4698 4684 378 350 639 554 825 648 106 53 283 101 452 122 98 13
+                            373 4 478 -15z m-14490 -34895 l-12080 -12080 -5357 0 -5358 0 0 5352 0 5353
+                            12082 12082 12083 12083 5355 -5355 5355 -5355 -12080 -12080z"/>
+                    </g>
+                    </svg>
+                </h3>
             </button>
             
             {/* isPanelVisible이 true일 때만 Portal을 통해 패널을 렌더링 */}
