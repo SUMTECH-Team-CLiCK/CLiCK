@@ -38,7 +38,7 @@ function injectClickButton() {
     // 채팅창 오른쪽의 아이콘 그룹을 선택합니다.
     const targetContainer = document.querySelector('[class="ms-auto flex items-center gap-1.5"]');
     if (targetContainer && !document.querySelector('#click-button-root')) {
-        const buttonRoot = document.createElement('div');
+        const buttonRoot = document.createElement('span');
         buttonRoot.id = 'click-button-root';
         
         // 아이콘 그룹의 맨 앞에 버튼을 추가합니다.

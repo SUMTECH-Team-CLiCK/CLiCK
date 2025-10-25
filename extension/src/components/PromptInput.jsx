@@ -138,6 +138,7 @@ export default function PromptInput() {
         <>
             {/* 분석 패널 열기 버튼 (이제 마이크 옆에 표시됨) */}
             <button
+                type="button"
                 className="click-analyze-button"
                 title="프롬프트 분석"
                 onClick={() => setPanelVisible(v => !v)}
