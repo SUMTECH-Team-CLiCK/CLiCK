@@ -60,7 +60,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                     ))}
                 </div>
                 <button className="apply-all-btn" onClick={() => onApplyAll(result.full_suggestion || patchedText)}>
-                    전체 수정
+                    <h3>apply</h3>
                 </button>
                 <button className="close-btn" onClick={onClose}>×</button>
             </div>

@@ -137,20 +137,38 @@ click-analyze-button, .click-analyze-button h3 {
     margin-left: auto;
     background: var(--theme-user-selection-bg);
     fill : currentColor;
-    border: none;
+
+    box-sizing: border-box;
+    border-width: 0px;
+    border-style: solid;
+    border-color: initial;
+    border-image: initial;
     border-radius: 28px;
+    --tw-shadow: 0px 4px 4px 0px var(--tw-shadow-color, var(--shadow-color-1, #0000000a)), 0px 0px 1px 0px var(--tw-shadow-color, var(--shadow-color-2, #0000009e)); 
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow); 
+    overflow: hidden;
+    
     padding: 0.5rem 1rem;
     cursor: pointer;
     font-family: inherit;
 
     height: calc(var(--spacing) * 6);
     justify-content: center;
+    align-items: center;
+    display: flex; 
+}
+.apply-all-btn h3 {
+    /* height: calc(var(--spacing) * 5); */
+    /* font-size: 13px; */
+    font-weight: 400;
+    margin: 0;
+    fill: currentColor;
+
+    justify-content: center;
+    align-items: center;
+    display: flex; 
 }
 
-.apply-all-btn h3 {
-    height: calc(var(--spacing) * 5);
-    width: calc(var(--spacing) * 5);
-}
 .close-btn {
     /* margin-left: auto; */
     background: none;
@@ -174,6 +192,7 @@ click-analyze-button, .click-analyze-button h3 {
     padding-left: calc(var(--spacing, .25rem) * 5);
     padding-right: calc(var(--spacing, .25rem) * 5);
     transform: translateY(-.5px);
+    word-break: break-all;
 }
 .panel-footer {
     background: var(--token-main-surface-secondary, #f7f7f8);
