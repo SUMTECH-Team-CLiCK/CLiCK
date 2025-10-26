@@ -76,14 +76,14 @@ export default function PromptInput() {
         const events = ['input', 'change', 'keyup', 'paste', 'cut', 'compositionend', 'blur'];
         events.forEach(ev => textarea.addEventListener(ev, handler));
         handler();
-        // 폴링 백업(100ms)
+        // 폴링 백업(10ms)
         const poll = setInterval(() => {
             const val = getTextareaValue(textarea);
             if (val !== prev) {
                 setLiveText(val);
                 prev = val;
             }
-        }, 100);
+        }, 10);
         return () => {
             events.forEach(ev => textarea.removeEventListener(ev, handler));
             clearInterval(poll);
