@@ -45,7 +45,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                 <button className="close-btn" onClick={onClose}>×</button>
             </div>
             <div className="panel-body" ref={bodyRef} style={{padding: 0, height: bodyHeight, overflow: 'auto', background: 'inherit'}}>
-                <div className="text-container" style={{...fallbackStyle, margin: 0, padding: '1rem', whiteSpace: 'pre-wrap', border: 'none', background: 'none', boxShadow: 'none'}}>{patchedText}</div>
+                <div className="text-container" style={{...fallbackStyle, margin: 0, whiteSpace: 'pre-wrap', border: 'none', background: 'none', boxShadow: 'none'}}>{patchedText}</div>
             </div>
 
             <div className='panel-footer' style={fallbackStyle}> 
@@ -65,7 +65,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                     <h3>apply</h3>
                 </button>
 
-                <button className="analysis-btn" onClick={onClose}>
+                <button className="analysis-btn">
                     <h3>analysis</h3>
                 </button>
             </div>
