@@ -33,13 +33,6 @@ export default function PromptInput() {
                         onApplyAll={handleApplyAll}
                         panelStyle={panelSize}
                     />
-                    {/* <button
-                        className="click-analyze-panel-btn"
-                        onClick={handleAnalyze}
-                        disabled={loading}
-                    >
-                        {loading ? '분석중...' : '분석하기'}
-                    </button> */}
                 </div>
                 )}
             </div>,
@@ -66,7 +59,7 @@ export default function PromptInput() {
 
     // 패널이 열려 있으면 입력값을 실시간 반영 (이벤트+폴링)
     useEffect(() => {
-        if (!isPanelVisible || !textarea) return;
+        if (!isPanelVisible) return;
         let prev = getTextareaValue(textarea);
         const handler = () => {
             const val = getTextareaValue(textarea);
@@ -79,10 +72,8 @@ export default function PromptInput() {
         // 폴링 백업(10ms)
         const poll = setInterval(() => {
             const val = getTextareaValue(textarea);
-            if (val !== prev) {
-                setLiveText(val);
-                prev = val;
-            }
+            setLiveText(val);
+            prev = val;
         }, 10);
         return () => {
             events.forEach(ev => textarea.removeEventListener(ev, handler));
@@ -107,7 +98,7 @@ export default function PromptInput() {
 
     // 분석하기 버튼 클릭 시
     const handleAnalyze = async () => {
-        if (!textarea || !getTextareaValue(textarea).trim()) return;
+        if (!textarea) return;
         setLoading(true);
         try {
             // 실제 백엔드 연동 시 아래 주석 해제
@@ -116,7 +107,7 @@ export default function PromptInput() {
             //     prompt: getTextareaValue(textarea)
             // });
             // if (response.error) throw new Error(response.error);
-            const response = { tags: [], patches: {}, full_suggestion: getTextareaValue(textarea) };
+            const response = { tags: ["example"], patches: {"ㅎ하호호": "하하호호"}, full_suggestion: "<p>예시 문장입니다.</p>" };
             setAnalysis({ source: getTextareaValue(textarea), result: response });
         } catch (err) {
             console.error('분석 실패:', err);

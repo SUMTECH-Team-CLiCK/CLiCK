@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
+import * as PromptInput from './PromptInput';
 
 export default function PromptAnalysis({ source, result, onClose, onApplyAll, panelStyle }) {
     const [enabledTags, setEnabledTags] = useState(() => result.tags || []);
@@ -30,14 +31,14 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     };
     // 입력창 높이 + header 높이만큼 전체 패널 높이
     useEffect(() => {
-    if (!panelStyle || !panelStyle.minHeight || !headerRef.current) {
+        if (!panelStyle || !panelStyle.minHeight || !headerRef.current) {
             return;
         }
 
         const maxHeight = 1200;
 
         setBodyHeight(`${panelStyle.minHeight}px`);
-    }, [panelStyle]); // 의존성 배열에서 headerRef.current 제거
+    }, [panelStyle, headerRef.current]);
     return (
         <div className="click-analysis-panel" style={{...panelStyle, ...fallbackStyle}}>
             <div className="panel-header" style={fallbackStyle} ref={headerRef}>
@@ -65,8 +66,10 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                     <h3>apply</h3>
                 </button>
 
-                <button className="analysis-btn">
-                    <h3>analysis</h3>
+                <button className="analysis-btn" onClick={PromptInput.handleAnalyze} disabled={PromptInput.loading}>
+                    <h3>
+                        {PromptInput.loading ? 'analyzing...' : 'analyze'}
+                    </h3>
                 </button>
             </div>
         </div>

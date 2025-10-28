@@ -11,11 +11,11 @@ import './App.css';
 // ★★★
 
 function injectSidebar() {
-    const targetNav = document.querySelector('nav');
+    const targetNav = document.querySelector('[class="group/sidebar-expando-section mb-[var(--sidebar-expanded-section-margin-bottom)]"]');
     if (targetNav && !document.querySelector('#click-sidebar-root')) {
         const sidebarRoot = document.createElement('div');
         sidebarRoot.id = 'click-sidebar-root';
-        targetNav.prepend(sidebarRoot);
+        targetNav.before(sidebarRoot);
 
         const root = ReactDOM.createRoot(sidebarRoot);
         root.render(
