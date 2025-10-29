@@ -8,7 +8,7 @@ export default function Sidebar() {
     const applyPrompt = (content) => {
         const textarea = document.querySelector('#prompt-textarea');
         if (textarea) {
-            textarea.value = content;
+            textarea.innerText = content;
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
             textarea.focus();
         }

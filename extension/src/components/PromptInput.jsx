@@ -163,12 +163,20 @@ export default function PromptInput() {
         }
     };
 
+    // handleApplyAll 함수 수정
     const handleApplyAll = (text) => {
         if (textarea) {
-            textarea.value = text;
-            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            // 텍스트 적용
+            textarea.innerText = text;
+            // 이벤트 발생 - ChatGPT UI 업데이트를 위해
+            textarea.dispatchEvent(new Event("change", { bubbles: true }));
+            textarea.focus(); // 포커스 이동
         }
-        setPanelVisible(false);
+        // 패널 상태 초기화 및 닫기
+        setAnalysis(null); // 분석 결과 초기화
+        setPanelVisible(false); // 패널 닫기
+        setLiveText(''); // 실시간 텍스트 초기화
+
     };
 
     return (
