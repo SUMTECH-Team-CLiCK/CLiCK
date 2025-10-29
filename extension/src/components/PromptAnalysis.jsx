@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import * as PromptInput from './PromptInput';
 
-export default function PromptAnalysis({ source, result, onClose, onApplyAll, panelStyle }) {
+export default function PromptAnalysis({ source, result, onClose, onApplyAll, panelStyle, onAnalyze, loading }) {
     const [enabledTags, setEnabledTags] = useState(() => result.tags || []);
     const bodyRef = useRef(null);
     const headerRef = useRef(null);
@@ -67,9 +66,9 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                     <h3>apply</h3>
                 </button>
 
-                <button className="analysis-btn" onClick={PromptInput.handleAnalyze} disabled={PromptInput.loading}>
+                <button className="analysis-btn" onClick={onAnalyze} disabled={loading}>
                     <h3>
-                        {PromptInput.loading ? 'analyzing...' : 'analyze'}
+                        {loading ? 'analyzing...' : 'analyze'}
                     </h3>
                 </button>
             </div>
