@@ -65,10 +65,12 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     };
 
     useEffect(() => {
-        if (!panelStyle?.minHeight || !headerRef.current) return;
-        const maxHeight = 1200;
-        setBodyHeight(`${panelStyle.minHeight}px`);
-    }, [panelStyle, headerRef]);
+    if (!panelStyle?.minHeight || !headerRef.current) return;
+    const maxHeight = 600;
+    const height = Math.min(panelStyle.minHeight, maxHeight);
+    setBodyHeight(`${height}px`);
+}, [panelStyle, headerRef]);
+
 
     return (
         <div className="click-analysis-panel" style={{...panelStyle, ...fallbackStyle}}>
