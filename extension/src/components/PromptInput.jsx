@@ -109,7 +109,51 @@ export default function PromptInput() {
             //     prompt: getTextareaValue(textarea)
             // });
             // if (response.error) throw new Error(response.error);
-            const response = { tags: ["모호/지시 불명확", "구조/길이 중복", "문체/스타일 개선", "용어/표현"], patches: {"ㅎ하호호": "하하호호"}, full_suggestion: "<p>예시 문장입니다.</p>" };
+            const response = {
+        // 4개의 주요 태그
+        tags: [
+            "모호/지시 불명확",
+            "구조/길이 중복",
+            "오타/맞춤법",
+            "용어/표현"
+        ],
+        // 각 태그별 수정 제안
+        patches: {
+            "모호/지시 불명확": [
+                {
+                    from: "조금 더 자세하게",
+                    to: "3문장 이내로"
+                },
+                {
+                    from: "가능한 한",
+                    to: "500자 이내로"
+                }
+            ],
+            "구조/길이 중복": [
+                {
+                    from: "설명하고 해설해주고",
+                    to: "설명하고"
+                }
+            ],
+            "오타/맞춤법": [
+                {
+                    from: "웨에",
+                    to: "왜"
+                },
+                {
+                    from: "됬다",
+                    to: "됐다"
+                }
+            ],
+            "용어/표현": [
+                {
+                    from: "~해줘",
+                    to: "~해주세요"
+                }
+            ]
+        },
+        full_suggestion: "GPT에게 C++ 포인터와 참조자의 차이점을 3문장 이내로 설명해주세요. 초보자도 이해할 수 있도록 500자 이내로 작성해주시고, 실제 코드 예시도 함께 보여주세요."
+    };
             setAnalysis({ source: getTextareaValue(textarea), result: response });
         } catch (err) {
             console.error('분석 실패:', err);
