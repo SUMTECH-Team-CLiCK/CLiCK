@@ -6,6 +6,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     const bodyRef = useRef(null);
     const headerRef = useRef(null);
     const [bodyHeight, setBodyHeight] = useState();
+    // const prinput = new
 
     const toggleTag = (tag) => {
         setEnabledTags(prev => 
@@ -40,16 +41,16 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
         setBodyHeight(`${panelStyle.minHeight}px`);
     }, [panelStyle, headerRef.current]);
     return (
-        <div className="click-analysis-panel">
-            <div className="panel-header">
+        <div className="click-analysis-panel" style={{...panelStyle, ...fallbackStyle}}>
+            <div className="panel-header" style={fallbackStyle} ref={headerRef}>
                 <h3>GPT Prompt Analysis</h3>
                 <button className="close-btn" onClick={onClose}>×</button>
             </div>
-            <div className="panel-body" ref={bodyRef}>
-                <div className="text-container">{patchedText}</div>
+            <div className="panel-body" ref={bodyRef} style={{padding: 0, height: bodyHeight, overflow: 'auto', background: 'inherit'}}>
+                <div className="text-container" style={{...fallbackStyle, margin: 0, whiteSpace: 'pre-wrap', border: 'none', background: 'none', boxShadow: 'none'}}>{patchedText}</div>
             </div>
 
-            <div className='panel-footer'>
+            <div className='panel-footer' style={fallbackStyle}> 
                 <div className="tag-bar">
                     {(result.tags || []).map(tag => (
                         <button 

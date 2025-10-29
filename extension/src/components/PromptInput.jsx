@@ -32,6 +32,8 @@ export default function PromptInput() {
                         onClose={() => setPanelVisible(false)}
                         onApplyAll={handleApplyAll}
                         panelStyle={panelSize}
+                        onAnalyze={handleAnalyze} // [수정] 분석 함수를 prop으로 전달
+                        loading={loading}         // [수정] 로딩 상태를 prop으로 전달
                     />
                 </div>
                 )}
