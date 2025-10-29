@@ -109,7 +109,7 @@ export default function PromptInput() {
             //     prompt: getTextareaValue(textarea)
             // });
             // if (response.error) throw new Error(response.error);
-            const response = { tags: ["지시 모호, 불명확", "반복 어휘"], patches: {"ㅎ하호호": "하하호호"}, full_suggestion: "<p>예시 문장입니다.</p>" };
+            const response = { tags: ["모호/지시 불명확", "구조/길이 중복", "문체/스타일 개선", "용어/표현"], patches: {"ㅎ하호호": "하하호호"}, full_suggestion: "<p>예시 문장입니다.</p>" };
             setAnalysis({ source: getTextareaValue(textarea), result: response });
         } catch (err) {
             console.error('분석 실패:', err);
