@@ -13,7 +13,6 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     const bodyRef = useRef(null);
     const headerRef = useRef(null);
     const [bodyHeight, setBodyHeight] = useState();
-    // const prinput = new
 
     const toggleTag = (tag) => {
         setEnabledTags(prev => 
