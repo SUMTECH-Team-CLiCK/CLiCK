@@ -32,8 +32,8 @@ export default function PromptInput() {
                         onClose={() => setPanelVisible(false)}
                         onApplyAll={handleApplyAll}
                         panelStyle={panelSize}
-                        onAnalyze={handleAnalyze} // [수정] 분석 함수를 prop으로 전달
-                        loading={loading}         // [수정] 로딩 상태를 prop으로 전달
+                        onAnalyze={handleAnalyze} 
+                        loading={loading}        
                     />
                 </div>
                 )}
@@ -109,7 +109,7 @@ export default function PromptInput() {
             //     prompt: getTextareaValue(textarea)
             // });
             // if (response.error) throw new Error(response.error);
-            const response = { tags: ["example"], patches: {"ㅎ하호호": "하하호호"}, full_suggestion: "<p>예시 문장입니다.</p>" };
+            const response = { tags: ["지시 모호, 불명확", "반복 어휘"], patches: {"ㅎ하호호": "하하호호"}, full_suggestion: "<p>예시 문장입니다.</p>" };
             setAnalysis({ source: getTextareaValue(textarea), result: response });
         } catch (err) {
             console.error('분석 실패:', err);
