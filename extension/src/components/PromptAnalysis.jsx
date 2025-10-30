@@ -15,6 +15,19 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     const [bodyHeight, setBodyHeight] = useState();
     const [currentText, setCurrentText] = useState('');
 
+    const patchesByTag = useMemo(() => {
+        if (!result?.patches) return {};
+        return result.patches.reduce((acc, patch) => {
+            if (!acc[patch.tag]) {
+                acc[patch.tag] = [];
+            }
+            acc[patch.tag].push(patch);
+            return acc;
+        }, {});
+    }, [result]);
+
+    const tags = useMemo(() => Object.keys(patchesByTag), [patchesByTag]);
+
     // 결과가 변경될 때 초기화 (태그는 비활성 상태로)
     useEffect(() => {
         if (result?.full_suggestion) {
@@ -34,7 +47,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
             enabledTags.filter(t => t !== toggledTag);
             
         // 활성화된 태그의 패치들은 원래 텍스트로 되돌림
-        Object.entries(result.patches || {}).forEach(([tag, patches]) => {
+        Object.entries(patchesByTag || {}).forEach(([tag, patches]) => {
             if (Array.isArray(patches) && updatedEnabledTags.includes(tag)) {
                 patches.forEach(patch => {
                     updatedText = updatedText.replace(patch.to, patch.from);
@@ -54,22 +67,13 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
         updateTextWithTags(tag, !enabledTags.includes(tag));
     };
 
-    // const applyPatches = (tag) => {
-    //     if (!result?.patches?.[tag]) return;
-        
-    //     setAppliedPatches(prev => ({
-    //         ...prev,
-    //         [tag]: result.patches[tag].map(p => p.from)
-    //     }));
-    // };
-
     const getColoredText = useMemo(() => {
         if (!currentText) return source;
         
         let text = currentText;
         const replacements = [];
 
-        Object.entries(result.patches || {}).forEach(([tag, patches]) => {
+        Object.entries(patchesByTag || {}).forEach(([tag, patches]) => {
             if (!Array.isArray(patches)) return;
             
             patches.forEach(patch => {
@@ -95,7 +99,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
             });
 
         return text;
-    }, [currentText, enabledTags, result]);
+    }, [currentText, enabledTags, patchesByTag, source]);
 
     // 최종 적용
     const handleApplyAll = () => {
@@ -113,7 +117,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     useEffect(() => {
         if (!panelStyle?.minHeight || !headerRef.current) return;
         const maxHeight = 600;
-        const height = Math.min(panelStyle.minHeight, maxHeight);
+        const height = Math.min(parseInt(panelStyle.minHeight, 10), maxHeight);
         setBodyHeight(`${height}px`);
     }, [panelStyle, headerRef]);
 
@@ -133,7 +137,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
 
             <div className='panel-footer' style={fallbackStyle}> 
                 <div className="tag-bar">
-                    {(result.tags || []).map(tag => (
+                    {(tags || []).map(tag => (
                         <button 
                             key={tag} 
                             className={`tag ${enabledTags.includes(tag) ? 'active' : ''}`}
