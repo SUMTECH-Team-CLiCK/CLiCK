@@ -13,65 +13,79 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     const bodyRef = useRef(null);
     const headerRef = useRef(null);
     const [bodyHeight, setBodyHeight] = useState();
+    const [currentText, setCurrentText] = useState('');
 
-    // 결과가 변경될 때 초기 태그 설정
+    // 결과가 변경될 때 초기화 (태그는 비활성 상태로)
     useEffect(() => {
-        if (result?.tags) {
-            setEnabledTags(result.tags);
+        if (result?.full_suggestion) {
+            setCurrentText(result.full_suggestion); // 교정된 프롬프트로 시작
+            setEnabledTags([]); // 태그는 모두 비활성화 상태로
             setAppliedPatches({});
         }
     }, [result]);
 
+    // 태그 상태에 따라 텍스트 업데이트
+    const updateTextWithTags = (toggledTag, isEnabled) => {
+        let updatedText = result.full_suggestion; // 교정된 상태에서 시작
+        
+        // 현재 활성화된 태그들에 대해
+        const updatedEnabledTags = isEnabled ? 
+            [...enabledTags, toggledTag] : 
+            enabledTags.filter(t => t !== toggledTag);
+            
+        // 활성화된 태그의 패치들은 원래 텍스트로 되돌림
+        Object.entries(result.patches || {}).forEach(([tag, patches]) => {
+            if (Array.isArray(patches) && updatedEnabledTags.includes(tag)) {
+                patches.forEach(patch => {
+                    updatedText = updatedText.replace(patch.to, patch.from);
+                });
+            }
+        });
+
+        setCurrentText(updatedText);
+    };
+
     const toggleTag = (tag) => {
-        if (enabledTags.includes(tag)) {
-            // 태그가 활성화 상태면 패치 적용
-            applyPatches(tag);
-        }
         setEnabledTags(prev => 
             prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
         );
+        
+        // 태그 토글 시 텍스트 업데이트
+        updateTextWithTags(tag, !enabledTags.includes(tag));
     };
 
-    const applyPatches = (tag) => {
-        if (!result?.patches?.[tag]) return;
+    // const applyPatches = (tag) => {
+    //     if (!result?.patches?.[tag]) return;
         
-        setAppliedPatches(prev => ({
-            ...prev,
-            [tag]: result.patches[tag].map(p => p.from)
-        }));
-    };
+    //     setAppliedPatches(prev => ({
+    //         ...prev,
+    //         [tag]: result.patches[tag].map(p => p.from)
+    //     }));
+    // };
 
     const getColoredText = useMemo(() => {
-        if (!result?.original_text) return source;
+        if (!currentText) return source;
         
-        let text = result.original_text;
+        let text = currentText;
         const replacements = [];
 
         Object.entries(result.patches || {}).forEach(([tag, patches]) => {
             if (!Array.isArray(patches)) return;
             
             patches.forEach(patch => {
-                if (patch.from && patch.to) {
-                    const isEnabled = enabledTags.includes(tag);
-                    const isApplied = appliedPatches[tag]?.includes(patch.from);
-                    
-                    if (isEnabled && !isApplied) {
-                        replacements.push({
-                            from: patch.from,
-                            to: `<span style="color: ${TAG_COLORS[tag]};">${patch.from}</span>`,
-                            index: text.indexOf(patch.from)
-                        });
-                    } else if (isApplied) {
-                        replacements.push({
-                            from: patch.from,
-                            to: patch.to,
-                            index: text.indexOf(patch.from)
-                        });
-                    }
+                const isEnabled = enabledTags.includes(tag);
+                
+                if (isEnabled && text.includes(patch.from)) {
+                    replacements.push({
+                        from: patch.from,
+                        to: `<span style="color: ${TAG_COLORS[tag]};">${patch.from}</span>`,
+                        index: text.indexOf(patch.from)
+                    });
                 }
             });
         });
 
+        // 뒤에서부터 적용하여 인덱스 문제 방지
         replacements
             .sort((a, b) => b.index - a.index)
             .forEach(({ from, to }) => {
@@ -81,22 +95,11 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
             });
 
         return text;
-    }, [result, enabledTags, appliedPatches, source]);
+    }, [currentText, enabledTags, result]);
 
+    // 최종 적용
     const handleApplyAll = () => {
-        let finalText = result.original_text;
-        
-        Object.entries(appliedPatches).forEach(([tag, appliedFroms]) => {
-            if (!enabledTags.includes(tag)) return;
-            
-            result.patches[tag].forEach(patch => {
-                if (appliedFroms.includes(patch.from)) {
-                    finalText = finalText.replace(patch.from, patch.to);
-                }
-            });
-        });
-
-        onApplyAll(finalText);
+        onApplyAll(currentText);
     };
 
     const fallbackStyle = {
