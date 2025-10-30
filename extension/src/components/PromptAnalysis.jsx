@@ -9,78 +9,40 @@ const TAG_COLORS = {
 
 export default function PromptAnalysis({ source, result, onClose, onApplyAll, panelStyle, onAnalyze, loading }) {
     const [enabledTags, setEnabledTags] = useState([]);
-    const [appliedPatches, setAppliedPatches] = useState({});
     const bodyRef = useRef(null);
     const headerRef = useRef(null);
     const [bodyHeight, setBodyHeight] = useState();
-    const [currentText, setCurrentText] = useState('');
 
-    // 결과가 변경될 때 초기화 (태그는 비활성 상태로)
+    // 결과가 변경될 때 태그 상태 초기화
     useEffect(() => {
-        setCurrentText(result.full_suggestion); // 교정된 프롬프트로 시작
-        if (result?.full_suggestion) {
-            setEnabledTags([]); // 태그는 모두 비활성화 상태로
-            setAppliedPatches({});
+        if (result?.tags) {
+            // 모든 태그를 활성화 상태로 시작
+            setEnabledTags(result.tags);
         }
     }, [result]);
-
-    // 태그 상태에 따라 텍스트 업데이트
-    const updateTextWithTags = (toggledTag, isEnabled) => {
-        let updatedText = result.full_suggestion; // 교정된 상태에서 시작
-        
-        // 현재 활성화된 태그들에 대해
-        const updatedEnabledTags = isEnabled ? 
-            [...enabledTags, toggledTag] : 
-            enabledTags.filter(t => t !== toggledTag);
-            
-        // 활성화된 태그의 패치들은 원래 텍스트로 되돌림
-        Object.entries(result.patches || {}).forEach(([tag, patches]) => {
-            if (Array.isArray(patches) && updatedEnabledTags.includes(tag)) {
-                patches.forEach(patch => {
-                    updatedText = updatedText.replace(patch.to, patch.from);
-                });
-            }
-        });
-
-        setCurrentText(updatedText);
-    };
 
     const toggleTag = (tag) => {
         setEnabledTags(prev => 
             prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
         );
-        
-        // 태그 토글 시 텍스트 업데이트
-        updateTextWithTags(tag, !enabledTags.includes(tag));
     };
 
-    // const applyPatches = (tag) => {
-    //     if (!result?.patches?.[tag]) return;
-        
-    //     setAppliedPatches(prev => ({
-    //         ...prev,
-    //         [tag]: result.patches[tag].map(p => p.from)
-    //     }));
-    // };
-
     const getColoredText = useMemo(() => {
-        if (!currentText) return source;
-
+        if (!result?.full_suggestion) return source;
         
-        let text = currentText;
+        let text = result.full_suggestion;
         const replacements = [];
 
         Object.entries(result.patches || {}).forEach(([tag, patches]) => {
             if (!Array.isArray(patches)) return;
             
             patches.forEach(patch => {
-                const isEnabled = enabledTags.includes(tag);
-                
-                if (isEnabled && text.includes(patch.from)) {
+                // 활성화된 태그의 교정된 텍스트(to)에만 색상 적용
+                if (enabledTags.includes(tag) && text.includes(patch.to)) {
                     replacements.push({
-                        from: patch.from,
-                        to: `<span style="color: ${TAG_COLORS[tag]};">${patch.from}</span>`,
-                        index: text.indexOf(patch.from)
+                        from: patch.to,
+                        to: `<span style="color: ${TAG_COLORS[tag]};">${patch.to}</span>`,
+                        index: text.indexOf(patch.to)
                     });
                 }
             });
@@ -96,11 +58,23 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
             });
 
         return text;
-    }, [currentText, enabledTags, result]);
+    }, [result, enabledTags, source]);
 
-    // 최종 적용
+    // Apply 버튼 클릭 시 활성화된 태그의 교정사항만 적용
     const handleApplyAll = () => {
-        onApplyAll(currentText);
+        if (!result?.full_suggestion) return;
+        
+        // 활성화된 태그의 교정사항만 적용
+        let finalText = result.original_text;
+        Object.entries(result.patches || {}).forEach(([tag, patches]) => {
+            if (Array.isArray(patches) && enabledTags.includes(tag)) {
+                patches.forEach(patch => {
+                    finalText = finalText.replace(patch.from, patch.to);
+                });
+            }
+        });
+
+        onApplyAll(finalText);
     };
 
     const fallbackStyle = {
@@ -147,8 +121,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                                 borderRadius: '20px',
                                 cursor: 'pointer',
                                 background: enabledTags.includes(tag) ? 
-                                    appliedPatches[tag] ? '#666' : TAG_COLORS[tag] 
-                                    : 'transparent',
+                                    TAG_COLORS[tag] : 'transparent',
                                 color: enabledTags.includes(tag) ? '#fff' : '#666',
                                 transition: 'all 0.2s ease'
                             }}
