@@ -49,11 +49,15 @@ export default function PromptInput() {
             if (ta) {
                 setTextarea(ta);
                 if (isPanelVisible) setLiveText(getTextareaValue(ta));
+                if (getTextareaValue(ta) === null) {
+                    setLiveText('');
+                }
                 setPanelSize({
                     width: '100%',
                     minHeight: ta.offsetHeight ? ta.offsetHeight + 'px' : undefined,
                 });
                 clearInterval(interval);
+
             }
         }, 100);
         return () => clearInterval(interval);
@@ -68,6 +72,7 @@ export default function PromptInput() {
             setLiveText(val);
             prev = val;
         };
+
         const events = ['input', 'change', 'keyup', 'paste', 'cut', 'compositionend', 'blur'];
         events.forEach(ev => textarea.addEventListener(ev, handler));
         handler();
@@ -85,7 +90,7 @@ export default function PromptInput() {
 
     // 패널 크기/높이 입력창과 동기화
     useEffect(() => {
-        if (!isPanelVisible || !textarea) return;
+        if (!isPanelVisible) return;
         function syncPanelSize() {
             const taRect = textarea.getBoundingClientRect();
             setPanelSize({
