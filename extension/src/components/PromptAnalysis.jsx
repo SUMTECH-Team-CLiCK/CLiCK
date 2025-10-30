@@ -1,11 +1,10 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 
 const TAG_COLORS = {
-  '모호/지시 불명확': '#FF6B6B',  // 빨간색 계열
-  '구조/길이 중복': '#FFD93D',  // 노란색 계열
-  '문체/스타일 개선': '#4DABF7', // 파란색 계열
-  '오타/맞춤법': '#38D9A9',     // 초록색 계열
-  '용어/표현': '#845EF7'      // 보라색 계열
+  '모호/지시 불명확': '#FFF1CB',  // 빨간색 계열
+  '구조/길이 중복': '#B7A3E3',  // 노란색 계열
+  '문체/스타일 개선': '#C2E2FA', // 파란색 계열
+  '오타/맞춤법': '#FF8F8F',     // 초록색 계열
 };
 
 export default function PromptAnalysis({ source, result, onClose, onApplyAll, panelStyle, onAnalyze, loading }) {
