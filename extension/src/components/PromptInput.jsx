@@ -59,9 +59,11 @@ export default function PromptInput() {
         return () => clearInterval(interval);
     }, []);
 
+
+
     // 패널이 열려 있으면 입력값을 실시간 반영 (이벤트+폴링)
     useEffect(() => {
-        if (!isPanelVisible) return;
+        if (!isPanelVisible || !textarea) return;
         let prev = getTextareaValue(textarea);
         const handler = () => {
             const val = getTextareaValue(textarea);
@@ -71,12 +73,14 @@ export default function PromptInput() {
         const events = ['input', 'change', 'keyup', 'paste', 'cut', 'compositionend', 'blur'];
         events.forEach(ev => textarea.addEventListener(ev, handler));
         handler();
-        // 폴링 백업(10ms)
+        // 폴링 백업(100ms)
         const poll = setInterval(() => {
             const val = getTextareaValue(textarea);
-            setLiveText(val);
-            prev = val;
-        }, 10);
+            if (val !== prev) {
+                setLiveText(val);
+                prev = val;
+            }
+        }, 100);
         return () => {
             events.forEach(ev => textarea.removeEventListener(ev, handler));
             clearInterval(poll);
@@ -85,7 +89,7 @@ export default function PromptInput() {
 
     // 패널 크기/높이 입력창과 동기화
     useEffect(() => {
-        if (!isPanelVisible || !textarea) return;
+        if (!isPanelVisible) return;
         function syncPanelSize() {
             const taRect = textarea.getBoundingClientRect();
             setPanelSize({
