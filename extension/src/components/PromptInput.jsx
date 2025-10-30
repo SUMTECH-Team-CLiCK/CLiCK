@@ -100,61 +100,42 @@ export default function PromptInput() {
 
     // 분석하기 버튼 클릭 시
     const handleAnalyze = async () => {
-        if (!textarea) return;
-        setLoading(true);
-        try {
-            // 실제 백엔드 연동 시 아래 주석 해제
-            // const response = await chrome.runtime.sendMessage({
-            //     type: 'ANALYZE_PROMPT',
-            //     prompt: getTextareaValue(textarea)
-            // });
-            // if (response.error) throw new Error(response.error);
-            const response = {
-        // 4개의 주요 태그
-        tags: [
-            "모호/지시 불명확",
-            "구조/길이 중복",
-            "오타/맞춤법",
-            "용어/표현"
-        ],
-        // 각 태그별 수정 제안
-        patches: {
-            "모호/지시 불명확": [
-                {
-                    from: "조금 더 자세하게",
-                    to: "3문장 이내로"
-                },
-                {
-                    from: "가능한 한",
-                    to: "500자 이내로"
-                }
+    if (!textarea) return;
+    setLoading(true);
+    try {
+        // 실제 응답 형식에 맞는 예제 데이터
+        const response = {
+            tags: [
+                "모호/지시 불명확",
+                "구조/길이 중복",
+                "오타/맞춤법",
             ],
-            "구조/길이 중복": [
-                {
-                    from: "설명하고 해설해주고",
-                    to: "설명하고"
-                }
-            ],
-            "오타/맞춤법": [
-                {
-                    from: "웨에",
-                    to: "왜"
-                },
-                {
-                    from: "됬다",
-                    to: "됐다"
-                }
-            ],
-            "용어/표현": [
-                {
-                    from: "~해줘",
-                    to: "~해주세요"
-                }
-            ]
-        },
-        full_suggestion: "GPT에게 C++ 포인터와 참조자의 차이점을 3문장 이내로 설명해주세요. 초보자도 이해할 수 있도록 500자 이내로 작성해주시고, 실제 코드 예시도 함께 보여주세요."
-    };
-            setAnalysis({ source: getTextareaValue(textarea), result: response });
+            patches: {
+                "모호/지시 불명확": [
+                    {
+                        from: "설명",
+                        to: "기본 개념을 3가지 핵심 포인트로 설명"
+                    }
+                ],
+                "구조/길이 중복": [
+                    {
+                        from: "자세하고 상세하게",
+                        to: "자세하게"
+                    }
+                ],
+                "오타/맞춤법": [
+                    {
+                        from: "해줬스면",
+                        to: "해주었으면"
+                    }
+                ]
+            },
+            // 원본 텍스트를 저장 (패치 적용을 위해)
+            original_text: "인공지능에 대해 자세하고 상세하게 설명 해줬스면 좋겠어.",
+            // 전체 수정 제안
+            full_suggestion: "인공지능에 대해 자세하게 기본 개념을 3가지 핵심 포인트로 설명 해주었으면 좋겠어."
+        };
+        setAnalysis({ source: getTextareaValue(textarea), result: response });
         } catch (err) {
             console.error('분석 실패:', err);
             alert('분석에 실패했습니다. 백엔드 서버를 확인해주세요.');
