@@ -28,7 +28,7 @@ export default function PromptInput() {
                 <div style={{ position: 'relative', zIndex: 100, width: '100%' }}>
                     <PromptAnalysis
                         source={liveText}
-                        result={analysis ? analysis.result : { tags: [], patches: {}, full_suggestion: liveText }}
+                        result={analysis ? analysis.result : { patches: [], full_suggestion: liveText }}
                         onClose={() => setPanelVisible(false)}
                         onApplyAll={handleApplyAll}
                         panelStyle={panelSize}
@@ -104,42 +104,29 @@ export default function PromptInput() {
 
     // 분석하기 버튼 클릭 시
     const handleAnalyze = async () => {
-    if (!textarea) return;
-    setLoading(true);
-    try {
-        // 실제 응답 형식에 맞는 예제 데이터
-        const response = {
-            tags: [
-                "모호/지시 불명확",
-                "구조/길이 중복",
-                "오타/맞춤법",
-            ],
-            patches: {
-                "모호/지시 불명확": [
-                    {
-                        from: "설명",
-                        to: "기본 개념을 3가지 핵심 포인트로 설명"
-                    }
-                ],
-                "구조/길이 중복": [
-                    {
-                        from: "자세하고 상세하게",
-                        to: "자세하게"
-                    }
-                ],
-                "오타/맞춤법": [
-                    {
-                        from: "해줬스면",
-                        to: "해주었으면"
-                    }
-                ]
-            },
-            // 원본 텍스트를 저장 (패치 적용을 위해)
-            original_text: "인공지능에 대해 자세하고 상세하게 설명 해줬스면 좋겠어.",
-            // 전체 수정 제안
-            full_suggestion: "인공지능에 대해 자세하게 기본 개념을 3가지 핵심 포인트로 설명 해주었으면 좋겠어."
-        };
-        setAnalysis({ source: getTextareaValue(textarea), result: response });
+        if (!textarea) return;
+        setLoading(true);
+        try {
+            const input_prompt = getTextareaValue(textarea);
+            const device_uuid = 'web-extension-testid'// + Date.now() + '-' + Math.random().toString(36).substring(2, 15);
+
+            const response = await fetch('http://127.0.0.1:8000/api/analyze-prompt1', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    device_uuid,
+                    input_prompt,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            setAnalysis({ source: input_prompt, result });
         } catch (err) {
             console.error('분석 실패:', err);
             alert('분석에 실패했습니다. 백엔드 서버를 확인해주세요.');

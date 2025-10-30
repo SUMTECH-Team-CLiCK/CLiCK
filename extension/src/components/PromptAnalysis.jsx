@@ -33,7 +33,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
         let text = result.full_suggestion;
         const replacements = [];
 
-        Object.entries(result.patches || {}).forEach(([tag, patches]) => {
+        Object.entries(patchesByTag || {}).forEach(([tag, patches]) => {
             if (!Array.isArray(patches)) return;
             
             patches.forEach(patch => {
@@ -88,7 +88,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
     useEffect(() => {
         if (!panelStyle?.minHeight || !headerRef.current) return;
         const maxHeight = 600;
-        const height = Math.min(panelStyle.minHeight, maxHeight);
+        const height = Math.min(parseInt(panelStyle.minHeight, 10), maxHeight);
         setBodyHeight(`${height}px`);
     }, [panelStyle, headerRef]);
 
@@ -108,7 +108,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
 
             <div className='panel-footer' style={fallbackStyle}> 
                 <div className="tag-bar">
-                    {(result.tags || []).map(tag => (
+                    {(tags || []).map(tag => (
                         <button 
                             key={tag} 
                             className={`tag ${enabledTags.includes(tag) ? 'active' : ''}`}
