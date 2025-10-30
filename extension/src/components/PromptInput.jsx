@@ -107,6 +107,12 @@ export default function PromptInput() {
     if (!textarea) return;
     setLoading(true);
     try {
+
+        console.log('loading...');  
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        console.log('loading complete');
+
+
         // 실제 응답 형식에 맞는 예제 데이터
         const response = {
             tags: [
