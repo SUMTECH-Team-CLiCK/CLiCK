@@ -49,39 +49,38 @@ export default function PromptInput() {
             if (ta) {
                 setTextarea(ta);
                 if (isPanelVisible) setLiveText(getTextareaValue(ta));
-                if (getTextareaValue(ta) === null) {
-                    setLiveText('');
-                }
                 setPanelSize({
                     width: '100%',
                     minHeight: ta.offsetHeight ? ta.offsetHeight + 'px' : undefined,
                 });
                 clearInterval(interval);
-
             }
         }, 100);
         return () => clearInterval(interval);
     }, []);
 
+
+
     // 패널이 열려 있으면 입력값을 실시간 반영 (이벤트+폴링)
     useEffect(() => {
-        if (!isPanelVisible) return;
+        if (!isPanelVisible || !textarea) return;
         let prev = getTextareaValue(textarea);
         const handler = () => {
             const val = getTextareaValue(textarea);
             setLiveText(val);
             prev = val;
         };
-
         const events = ['input', 'change', 'keyup', 'paste', 'cut', 'compositionend', 'blur'];
         events.forEach(ev => textarea.addEventListener(ev, handler));
         handler();
-        // 폴링 백업(10ms)
+        // 폴링 백업(100ms)
         const poll = setInterval(() => {
             const val = getTextareaValue(textarea);
-            setLiveText(val);
-            prev = val;
-        }, 10);
+            if (val !== prev) {
+                setLiveText(val);
+                prev = val;
+            }
+        }, 100);
         return () => {
             events.forEach(ev => textarea.removeEventListener(ev, handler));
             clearInterval(poll);

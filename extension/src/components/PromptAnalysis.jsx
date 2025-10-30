@@ -17,8 +17,8 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
 
     // 결과가 변경될 때 초기화 (태그는 비활성 상태로)
     useEffect(() => {
+        setCurrentText(result.full_suggestion); // 교정된 프롬프트로 시작
         if (result?.full_suggestion) {
-            setCurrentText(result.full_suggestion); // 교정된 프롬프트로 시작
             setEnabledTags([]); // 태그는 모두 비활성화 상태로
             setAppliedPatches({});
         }
@@ -65,6 +65,7 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
 
     const getColoredText = useMemo(() => {
         if (!currentText) return source;
+
         
         let text = currentText;
         const replacements = [];
