@@ -163,19 +163,6 @@ export default function PromptAnalysis({ source, result, onClose, onApplyAll, pa
                                 }}
                             />
                             {tag}
-                            <span 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleTag(tag);
-                                }}
-                                style={{
-                                    marginLeft: '4px',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                                ×
-                            </span>
                         </button>
                     ))}
                 </div>
