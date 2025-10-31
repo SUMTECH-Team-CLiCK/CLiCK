@@ -116,34 +116,28 @@ export default function PromptInput() {
         // 실제 응답 형식에 맞는 예제 데이터
         const response = {
             tags: [
-                "모호/지시 불명확",
-                "구조/길이 중복",
                 "오타/맞춤법",
+                "모호/지시 불명확",
             ],
             patches: {
-                "모호/지시 불명확": [
-                    {
-                        from: "설명",
-                        to: "기본 개념을 3가지 핵심 포인트로 설명"
-                    }
-                ],
-                "구조/길이 중복": [
-                    {
-                        from: "자세하고 상세하게",
-                        to: "자세하게"
-                    }
-                ],
                 "오타/맞춤법": [
                     {
-                        from: "해줬스면",
-                        to: "해주었으면"
+                        from: "치킨먹고싶다~",
+                        to: "치킨 먹고 싶다~"
                     }
-                ]
+                ],
+                "모호/지시 불명확": [
+                    {
+                        from: "안되나?",
+                        to: "안 되는 이유를 3가지 이유로 설명해줘"
+                    }
+                ],
+                
             },
             // 원본 텍스트를 저장 (패치 적용을 위해)
-            original_text: "인공지능에 대해 자세하고 상세하게 설명 해줬스면 좋겠어.",
+            original_text: "아 치킨먹고싶다~ 안되나?",
             // 전체 수정 제안
-            full_suggestion: "인공지능에 대해 자세하게 기본 개념을 3가지 핵심 포인트로 설명 해주었으면 좋겠어."
+            full_suggestion: "아 치킨 먹고 싶다~ 안 되는 이유를 3가지 이유로 설명해줘"
         };
         setAnalysis({ source: getTextareaValue(textarea), result: response });
         } catch (err) {

@@ -1,23 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Sidebar() {
-
     const [customPrompts, setCustomPrompts] = useState([]);  // 필요한 경우 여기에 기본값 추가 가능
     // 추천 프롬프트 목록
     const [recommendedPrompts] = useState([
         { 
-            id: 1, 
-            title: 'A/B 테스트 분석', 
-            content: '제품의 A/B 테스트 결과를 분석하여 다음 세 가지 관점에서 인사이트를 도출해줘: 1) 사용자 행동 변화 2) 전환율 영향 3) 통계적 유의성',
-            tag: '구조/길이 중복'
+            title: 'T-분포 개괄', 
+            content: 'T-분포의 정의와 주요 특징을 설명해줘.',
         },
         { 
-            id: 2, 
-            title: '코드 리팩토링 제안', 
-            content: '이 코드의 가독성과 유지보수성을 높이기 위한 리팩토링 방안을 SOLID 원칙에 따라 제시해줘. 각 제안에는 변경 이유와 기대 효과를 포함해줘.',
-            tag: '모호/지시 불명확'
-        }
+            title: 'F-분포 개괄', 
+            content: 'F-분포의 정의와 주요 두 개의 자유도 비교에 중점을 둬서 설명해줘.',
+        },
     ]);
+
+    // useEffect 내부의 코드를 다음과 같이 수정
+useEffect(() => {
+    let submitButton = null;
+    let checkInterval;
+
+    // submit 버튼을 주기적으로 찾는 함수
+    const findSubmitButton = () => {
+        const button = document.querySelector('#composer-submit-button');
+        if (button && !submitButton) {
+            submitButton = button;
+            submitButton.addEventListener('click', handleSubmit);
+        }
+    };
+
+    const handleSubmit = () => {
+        const textarea = document.querySelector('#prompt-textarea');
+        if (!textarea) return;
+
+        // 실제로는 백엔드 API 호출하여 추천 프롬프트를 받아와야 함
+        // 현재는 mockup data로 대체
+        const newRecommendedPrompts = [
+            { 
+                title: '개선된 프롬프트',
+                content: textarea.innerText,
+            },
+            recommendedPrompts[0] // 최근 2개만 유지
+        ];
+
+        setRecommendedPrompts(newRecommendedPrompts);
+    };
+
+    // 주기적으로 버튼을 찾음
+    checkInterval = setInterval(findSubmitButton, 1000);
+
+    // 컴포넌트 언마운트 시 정리
+    return () => {
+        clearInterval(checkInterval);
+        if (submitButton) {
+            submitButton.removeEventListener('click', handleSubmit);
+        }
+    };
+}, [recommendedPrompts]);
+
+    // Enter 키 제출 감지
+    useEffect(() => {
+        const textarea = document.querySelector('#prompt-textarea');
+        if (!textarea) return;
+
+        const handleKeyPress = (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const submitButton = document.querySelector('#composer-submit-button');
+                if (submitButton && !submitButton.disabled) {
+                    // Submit 버튼의 click 이벤트를 발생시켜 위의 핸들러가 처리하도록 함
+                    submitButton.click();
+                }
+            }
+        };
+
+        textarea.addEventListener('keypress', handleKeyPress);
+        return () => textarea.removeEventListener('keypress', handleKeyPress);
+    }, []);
 
     // customPrompts와 recommendedPrompts를 합침
     const allPrompts = [...customPrompts, ...recommendedPrompts];
