@@ -19,6 +19,17 @@ useEffect(() => {
     let submitButton = null;
     let checkInterval;
 
+    const predefinedPrompts = [
+        { 
+            title: '통계 분포의 정의',
+            content: '확률 분포의 정의와 주요 특징을 설명해줘.',
+        },
+        { 
+            title: '통계적 가설검정',
+            content: '통계적 가설검정의 개념과 단계별 절차를 설명해줘.',
+        }
+    ];
+
     // submit 버튼을 주기적으로 찾는 함수
     const findSubmitButton = () => {
         const button = document.querySelector('#composer-submit-button');
@@ -32,17 +43,11 @@ useEffect(() => {
         const textarea = document.querySelector('#prompt-textarea');
         if (!textarea) return;
 
-        // 실제로는 백엔드 API 호출하여 추천 프롬프트를 받아와야 함
-        // 현재는 mockup data로 대체
-        const newRecommendedPrompts = [
-            { 
-                title: '개선된 프롬프트',
-                content: textarea.innerText,
-            },
-            recommendedPrompts[0] // 최근 2개만 유지
-        ];
-
-        setRecommendedPrompts(newRecommendedPrompts);
+        // 프롬프트 교체 로직
+        const currentPromptIndex = Math.floor(Math.random() * 2); // 0 또는 1
+        const updatedPrompts = [...recommendedPrompts];
+        updatedPrompts[currentPromptIndex] = predefinedPrompts[currentPromptIndex];
+        setRecommendedPrompts(updatedPrompts);
     };
 
     // 주기적으로 버튼을 찾음
